@@ -1,0 +1,14 @@
+# Node-Module
+node_modules/
+
+# TypeScript Build-Output
+dist/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# System-Dateien
+.DS_Store
+Thumbs.db

@@ -1,0 +1,32 @@
+# Allgemeine Dateien
+*.log
+.DS_Store
+Thumbs.db
+
+# appsettings-Dateien ignorieren
+appsettings.json
+appsettings.*.json
+
+# Frontend ignorieren
+/frontend/node_modules/
+/frontend/dist/
+/frontend/npm-debug.log*
+
+# Backend ignorieren
+/backend/bin/
+/backend/obj/
+/backend/*.log
+
+# Docker ignorieren (optional)
+docker-compose.override.yml
+.dockerignore
+
+# IDE-spezifische Dateien
+.vscode/
+.idea/
+*.swp
+*.sln
+
+# Temporary Dateien
+*.tmp
+*.bak
