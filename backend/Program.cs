@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using backend.Models;
+using backend.Data;
 
 namespace backend
 {
@@ -10,6 +13,8 @@ namespace backend
             // Add services to the container.
 
             builder.Services.AddControllers();
+            builder.Services.AddDbContext<ApplicationDbContext>(opt =>
+                opt.UseInMemoryDatabase("TaskItems"));
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
