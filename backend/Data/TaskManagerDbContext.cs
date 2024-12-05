@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace backend.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class TaskManagerDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public TaskManagerDbContext(DbContextOptions<TaskManagerDbContext> options)
         : base(options)
         {
         }

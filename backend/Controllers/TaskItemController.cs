@@ -6,25 +6,17 @@ using Microsoft.EntityFrameworkCore;
 namespace backend.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class TaskItemsController : ControllerBase
+    [Route("api/[controller]")]
+    public class TaskItemController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly TaskManagerDbContext _context;
 
-        public TaskItemsController(ApplicationDbContext context)
+        public TaskItemController(TaskManagerDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/TaskItems
-        [HttpGet]
-        public async Task<IActionResult> GetTaskItems()
-        {
-            var taskItems = await _context.TaskItems.ToListAsync();
-            return Ok(taskItems); // Returns all elements in a list as JSON
-        }
-
-        // GET: api/TaskItems/5
+        // GET: api/TaskItem
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTaskItem(long id)
         {
@@ -36,13 +28,21 @@ namespace backend.Controllers
             return Ok(taskItem); // Returns element as JSON
         }
 
-        // POST: api/TaskItems
+        // GET: api/TaskItems
+        [HttpGet]
+        public async Task<IActionResult> GetTaskItems()
+        {
+            var taskItems = await _context.TaskItems.ToListAsync();
+            return Ok(taskItems); // Returns all elements in a list as JSON
+        }
+
+        // POST: api/TaskItem
         [HttpPost]
         public async Task<IActionResult> CreateTaskItem([FromBody] TaskItem taskItem)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState); // Returns a Error in the ModelState
+                return BadRequest(ModelState); // Returns a error in the ModelState
             }
 
             _context.TaskItems.Add(taskItem);

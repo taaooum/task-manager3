@@ -9,32 +9,32 @@ namespace backend
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            { 
+                // DI IoC Container Configurations //
 
-            // Add services to the container.
+                builder.Services.AddControllers();
+                builder.Services.AddDbContext<TaskManagerDbContext>(opt =>
+                    opt.UseInMemoryDatabase("TaskManager"));
 
-            builder.Services.AddControllers();
-            builder.Services.AddDbContext<ApplicationDbContext>(opt =>
-                opt.UseInMemoryDatabase("TaskItems"));
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                builder.Services.AddEndpointsApiExplorer();
+                builder.Services.AddSwaggerGen();
             }
 
-            app.UseHttpsRedirection();
+            var app = builder.Build();
+            {
+                // Middleware Configurations - Configure the HTTP request pipeline
+                if (app.Environment.IsDevelopment())
+                {
+                    app.UseSwagger();
+                    app.UseSwaggerUI();
+                }
 
-            app.UseAuthorization();
+                app.UseHttpsRedirection();
 
+                app.UseAuthorization();
 
-            app.MapControllers();
-
+                app.MapControllers();
+            }
             app.Run();
         }
     }
