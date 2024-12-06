@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using backend.Models;
 using backend.Data;
+using backend.Models;
+using System.Configuration;
 
 namespace backend
 {
@@ -9,17 +10,19 @@ namespace backend
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            { 
-                // DI IoC Container Configurations //
+            // DI IoC Container Configurations //
+            builder.Services.AddControllers();
 
-                builder.Services.AddControllers();
-                builder.Services.AddDbContext<TaskManagerDbContext>(opt =>
-                    opt.UseInMemoryDatabase("TaskManager"));
+            // IoC Container Configuration
+            var configuration = builder.Configuration;
+           
+            // add DBcontext to SQL Server
+            builder.Services.AddDbContext<TaskManagerDbContext>(options =>
+                    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-                builder.Services.AddEndpointsApiExplorer();
-                builder.Services.AddSwaggerGen();
-            }
-
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+            
             var app = builder.Build();
             {
                 // Middleware Configurations - Configure the HTTP request pipeline

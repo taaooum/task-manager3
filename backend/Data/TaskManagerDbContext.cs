@@ -1,5 +1,7 @@
 ﻿using backend.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer;
+using System.Configuration;
 
 namespace backend.Data
 {
