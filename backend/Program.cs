@@ -7,38 +7,51 @@ namespace backend
 {
     public class Program
     {
+        // Main entry point of the application
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            // DI IoC Container Configurations //
-            builder.Services.AddControllers();
 
-            // IoC Container Configuration
-            var configuration = builder.Configuration;
-           
-            // add DBcontext to SQL Server
+            // Dependency Injection (DI) and Inversion of Control (IoC) Container Configuration
+            
+            builder.Services.AddControllers(); // Add controllers to the DI container to handle API requests
+
+            // Add DbContext to connect to the SQL Server database
             builder.Services.AddDbContext<TaskManagerDbContext>(options =>
-                    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            // Add services for API documentation generation using Swagger
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            
+
+
+
+            // Build the application from the configured services
             var app = builder.Build();
             {
-                // Middleware Configurations - Configure the HTTP request pipeline
-                if (app.Environment.IsDevelopment())
+                // Middleware Configuration - Set up the HTTP request pipeline
+
+                // Initialize seed data if necessary
+                using (var scope = app.Services.CreateScope())
                 {
-                    app.UseSwagger();
-                    app.UseSwaggerUI();
+                    // Call the SeedTask.Initialize method to add initial data to the database
+                    SeedTask.Initialize(scope.ServiceProvider);
                 }
 
-                app.UseHttpsRedirection();
-
-                app.UseAuthorization();
-
-                app.MapControllers();
+                // If the environment is development, enable Swagger for API documentation
+                if (app.Environment.IsDevelopment())
+                {
+                    app.UseSwagger();               // Enable Swagger middleware
+                    app.UseSwaggerUI();            // Enable Swagger UI for user-friendly API interaction
+                }
+               
+                app.UseHttpsRedirection();  // Enable HTTPS redirection for secure communication
+                app.UseAuthorization();     // Enable authorization middleware to enforce security policies
+                app.MapControllers();       // Map API controllers to the request pipeline
             }
+
             app.Run();
         }
     }
 }
+

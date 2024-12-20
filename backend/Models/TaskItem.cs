@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using backend.Data;
 
 namespace backend.Models
 {
@@ -7,19 +8,12 @@ namespace backend.Models
         [Key]
         public long Id { get; set; }
         [Required]
-        public string? Name { get; set; }
+        public string Name { get; set; } = null!;
         public string? Description { get; set; }
         public DateTime? Reminder {  get; set; }
         public DateTime? DueDate { get; set; }
-        public enum Repetition
-        {
-            None = 0,
-            Daily = 1,
-            Weekly = 2,
-            Monthly = 3,
-            Yearly = 4
-        }
-        [Required]
-        public bool IsComplete { get; set; } 
+        public RepetitionCategory Frequency { get; set; } = RepetitionCategory.None; // The interval/frequency of repetition for the task (e.g., Daily, Weekly)
+        public bool IsComplete { get; set; } = false;
+        
     }
 }

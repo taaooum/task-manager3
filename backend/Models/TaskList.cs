@@ -7,7 +7,7 @@ namespace backend.Models
         [Key]
         public long Id { get; set; }
         [Required]
-        public string? Name { get; set; }
+        public string Name { get; set; } = null!;
         public string? Description { get; set; }
     }
 }

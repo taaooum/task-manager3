@@ -7,14 +7,9 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class TaskItemController : ControllerBase
+    public class TaskItemController(TaskManagerDbContext context) : ControllerBase
     {
-        private readonly TaskManagerDbContext _context;
-
-        public TaskItemController(TaskManagerDbContext context)
-        {
-            _context = context;
-        }
+        private readonly TaskManagerDbContext _context = context;
 
         // GET: api/TaskItem
         [HttpGet("{id}")]

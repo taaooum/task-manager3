@@ -7,13 +7,9 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class TaskListController : ControllerBase
+    public class TaskListController(TaskManagerDbContext context) : ControllerBase
     {
-        private readonly TaskManagerDbContext _context;
-        public TaskListController(TaskManagerDbContext context)
-        {
-            _context = context;
-        }
+        private readonly TaskManagerDbContext _context = context;
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTaskList(long id)
