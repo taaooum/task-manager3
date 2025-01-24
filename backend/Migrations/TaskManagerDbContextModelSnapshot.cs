@@ -10,7 +10,7 @@ using backend.Data;
 
 namespace backend.Migrations
 {
-    [DbContext(typeof(TaskManagerDbContext))]
+    [DbContext(typeof(RepositoryDbContext))]
     partial class TaskManagerDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

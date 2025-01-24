@@ -1,13 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace backend.Models.Data
+namespace backend.Models.Domain
 {
-    public class TaskList
+    public class Bucket
     {
         [Key]
-        public long Id { get; set; }
+        public Guid Id { get; set; }
         [Required]
         public string Name { get; set; } = null!;
         public string? Description { get; set; }
+        public IEnumerable<Item>? Items { get; set; }
     }
 }

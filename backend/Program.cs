@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using backend.Data;
-using backend.Models;
 using System.Configuration;
+using backend.Data.Seeds;
+using backend.Logic;
+using backend.Repositories;
 
 namespace backend
 {
@@ -13,11 +15,16 @@ namespace backend
             var builder = WebApplication.CreateBuilder(args);
 
             // Dependency Injection (DI) and Inversion of Control (IoC) Container Configuration
-            
+            builder.Services.AddScoped<BucketRepository>();
+            builder.Services.AddScoped<ItemRepository>(); 
+
+            builder.Services.AddScoped<BucketService>();
+            builder.Services.AddScoped<ItemService>();
+
             builder.Services.AddControllers(); // Add controllers to the DI container to handle API requests
 
             // Add DbContext to connect to the SQL Server database
-            builder.Services.AddDbContext<TaskManagerDbContext>(options =>
+            builder.Services.AddDbContext<RepositoryDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             // Add services for API documentation generation using Swagger

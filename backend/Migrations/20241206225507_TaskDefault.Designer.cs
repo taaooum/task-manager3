@@ -11,7 +11,7 @@ using backend.Data;
 
 namespace backend.Migrations
 {
-    [DbContext(typeof(TaskManagerDbContext))]
+    [DbContext(typeof(RepositoryDbContext))]
     [Migration("20241206225507_TaskDefault")]
     partial class TaskDefault
     {

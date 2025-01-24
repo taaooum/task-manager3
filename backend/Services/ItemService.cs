@@ -1,15 +1,15 @@
 ﻿using backend.Data;
-using backend.Models.Data;
+using backend.Models.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Logic
 {
-    public class TaskItemLogic(TaskManagerDbContext context)
+    public class ItemService(RepositoryDbContext context)
     {
-        private readonly TaskManagerDbContext _context = context;
+        private readonly RepositoryDbContext _context = context;
 
-        public async Task<TaskItem> GetTaskItem(long id)
+        public async Task<Item> GetTaskItem(long id)
         {
             var taskItem = await _context.TaskItems.FindAsync(id);
             if (taskItem == null)
@@ -20,7 +20,7 @@ namespace backend.Logic
             return taskItem; // Returns element as JSON
         }
 
-        public async Task<List<TaskItem>> GetTaskItems()
+        public async Task<List<Item>> GetTaskItems()
         {
             var taskItems = await _context.TaskItems.ToListAsync();
 
@@ -33,9 +33,9 @@ namespace backend.Logic
             return taskItems; // Returns all elements in a list as JSON
         }
 
-        public async Task<TaskItem> CreateTaskItem([FromBody] TaskItem taskItem)
+        public async Task<Item> CreateTaskItem([FromBody] Item taskItem)
         {
-            if (true)
+            if (false)
             {
                 throw new Exception(); // Returns a error in the ModelState
             }
@@ -46,7 +46,7 @@ namespace backend.Logic
             return taskItem;
         }
 
-        public async Task<TaskItem> DeleteTaskItem(long id)
+        public async Task<Item> DeleteTaskItem(long id)
         {
             var taskItem = await _context.TaskItems.FindAsync(id);
             

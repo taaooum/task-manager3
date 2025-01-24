@@ -1,6 +1,6 @@
 ﻿using backend.Data;
 using backend.Logic;
-using backend.Models.Data;
+using backend.Models.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,16 +8,16 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class TaskItemController : ControllerBase
+    public class ItemController : ControllerBase
     {
-        public readonly TaskItemLogic _itemLogic = new TaskItemLogic(); // to seperate Database operations from Api requests 
+        public readonly ItemService _itemLogic; // to seperate Database operations from Api requests 
 
         // GET: api/TaskItem
         [HttpGet("GetItem{id}")]
-        [ProducesResponseType<TaskItem>(StatusCodes.Status200OK)]
+        [ProducesResponseType<Item>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<TaskItem> GetItem(long id)
+        public async Task<Item> GetItem(long id)
         {
             var taskItem = await _itemLogic.GetTaskItem(id); 
             
@@ -26,9 +26,9 @@ namespace backend.Controllers
 
         // GET: api/TaskItems
         [HttpGet("GetItems")]
-        [ProducesResponseType<TaskItem>(StatusCodes.Status200OK)]
+        [ProducesResponseType<Item>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<List<TaskItem>> GetItemlist()
+        public async Task<List<Item>> GetItemlist()
         {
             var taskItems = await _itemLogic.GetTaskItems();
 
@@ -37,9 +37,9 @@ namespace backend.Controllers
 
         // POST: api/TaskItem
         [HttpPost]
-        [ProducesResponseType<TaskItem>(StatusCodes.Status201Created, Type = typeof(TaskItem))]
+        [ProducesResponseType<Item>(StatusCodes.Status201Created, Type = typeof(Item))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<TaskItem>> CreateItem([FromBody] TaskItem item)
+        public async Task<ActionResult<Item>> CreateItem([FromBody] Item item)
         {
             var newTask = await _itemLogic.CreateTaskItem(item);
 
@@ -50,7 +50,7 @@ namespace backend.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<TaskItem>> DeleteItem(long id)
+        public async Task<ActionResult<Item>> DeleteItem(long id)
         {
             var taskItem = await _itemLogic.DeleteTaskItem(id);
 

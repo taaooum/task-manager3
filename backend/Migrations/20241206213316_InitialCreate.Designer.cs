@@ -11,7 +11,7 @@ using backend.Data;
 
 namespace backend.Migrations
 {
-    [DbContext(typeof(TaskManagerDbContext))]
+    [DbContext(typeof(RepositoryDbContext))]
     [Migration("20241206213316_InitialCreate")]
     partial class InitialCreate
     {
