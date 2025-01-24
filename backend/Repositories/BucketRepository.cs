@@ -1,10 +1,11 @@
 ﻿using backend.Data;
 using backend.Models.Domain;
 using Microsoft.EntityFrameworkCore;
+using backend.Repositories.Interfaces;
 
 namespace backend.Repositories
 {
-    public class BucketRepository
+    public class BucketRepository : IBucketRepository
     {
         private readonly RepositoryDbContext _context;
         public BucketRepository(RepositoryDbContext dbContext) => _context = dbContext;
@@ -24,7 +25,13 @@ namespace backend.Repositories
             _context.Buckets.Add(bucket);
             await _context.SaveChangesAsync();
         }
-        
+
+        public async void UpdateBucket(Bucket bucket)
+        {
+            _context.Buckets.Update(bucket);
+            await _context.SaveChangesAsync();
+        }
+
         public async void DeleteBucket(Guid id)
         {
             var bucket = await _context.Buckets.FindAsync(id);

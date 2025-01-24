@@ -9,23 +9,23 @@ namespace backend.Repositories
         private readonly RepositoryDbContext _context;
         public ItemRepository(RepositoryDbContext dbContext) => _context = dbContext;
 
-        public async Task<List<Item>> GetAllBuckets()
+        public async Task<List<Item>> GetAllItems()
         {
             return await _context.Items.ToListAsync();
         }
 
-        public async Task<Item?> GetBucketById(Guid id)
+        public async Task<Item?> GetItemById(Guid id)
         {
             return await _context.Items.FindAsync(id);
         }
 
-        public async void AddBucket(Item item)
+        public async void AddItem(Item item)
         {
             _context.Items.Add(item);
             await _context.SaveChangesAsync();
         }
 
-        public async void DeleteBucket(Guid id)
+        public async void DeleteItem(Guid id)
         {
             var bucket = await _context.Items.FindAsync(id);
             if (bucket != null)

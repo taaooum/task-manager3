@@ -10,28 +10,27 @@ namespace backend.Controllers
     [Route("api/[controller]")]
     public class ItemController : ControllerBase
     {
-        public readonly ItemService _itemLogic; // to seperate Database operations from Api requests 
+        public readonly ItemService _itemService; // to seperate Database operations from Api requests 
 
         // GET: api/TaskItem
         [HttpGet("GetItem{id}")]
         [ProducesResponseType<Item>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<Item> GetItem(long id)
+        public async Task<Item> GetItem(Guid id)
         {
-            var taskItem = await _itemLogic.GetTaskItem(id); 
-            
+            var taskItem = await _itemService.GetTaskItem(id); 
             return taskItem;
         }
 
         // GET: api/TaskItems
         [HttpGet("GetItems")]
         [ProducesResponseType<Item>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<List<Item>> GetItemlist()
         {
-            var taskItems = await _itemLogic.GetTaskItems();
-
+            var taskItems = await _itemService.GetTaskItems();
             return taskItems; // Returns all elements in a list as JSON
         }
 
@@ -41,7 +40,7 @@ namespace backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Item>> CreateItem([FromBody] Item item)
         {
-            var newTask = await _itemLogic.CreateTaskItem(item);
+            var newTask = await _itemService.CreateTaskItem(item);
 
             return CreatedAtAction(nameof(newTask), new { id = newTask.Id }, newTask);
         }
@@ -52,8 +51,7 @@ namespace backend.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Item>> DeleteItem(long id)
         {
-            var taskItem = await _itemLogic.DeleteTaskItem(id);
-
+            var taskItem = await _itemService.DeleteTaskItem(id);
             return NoContent(); // Returns a HTTP 204, if delete was successful
         }
     }
