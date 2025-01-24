@@ -1,5 +1,6 @@
 ﻿using backend.Data;
-using backend.Models;
+using backend.Logic;
+using backend.Models.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,57 +8,51 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class TaskItemController(TaskManagerDbContext context) : ControllerBase
+    public class TaskItemController : ControllerBase
     {
-        private readonly TaskManagerDbContext _context = context;
+        public readonly TaskItemLogic _itemLogic = new TaskItemLogic(); // to seperate Database operations from Api requests 
 
         // GET: api/TaskItem
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetTaskItem(long id)
+        [HttpGet("GetItem{id}")]
+        [ProducesResponseType<TaskItem>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<TaskItem> GetItem(long id)
         {
-            var taskItem = await _context.TaskItems.FirstOrDefaultAsync(t => t.Id == id);
-            if (taskItem == null)
-            {
-                return NotFound(); // Returns a HTTP 404, if the element gets not found
-            }
-            return Ok(taskItem); // Returns element as JSON
+            var taskItem = await _itemLogic.GetTaskItem(id); 
+            
+            return taskItem;
         }
 
         // GET: api/TaskItems
-        [HttpGet]
-        public async Task<IActionResult> GetTaskItems()
+        [HttpGet("GetItems")]
+        [ProducesResponseType<TaskItem>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<List<TaskItem>> GetItemlist()
         {
-            var taskItems = await _context.TaskItems.ToListAsync();
-            return Ok(taskItems); // Returns all elements in a list as JSON
+            var taskItems = await _itemLogic.GetTaskItems();
+
+            return taskItems; // Returns all elements in a list as JSON
         }
 
         // POST: api/TaskItem
         [HttpPost]
-        public async Task<IActionResult> CreateTaskItem([FromBody] TaskItem taskItem)
+        [ProducesResponseType<TaskItem>(StatusCodes.Status201Created, Type = typeof(TaskItem))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<TaskItem>> CreateItem([FromBody] TaskItem item)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState); // Returns a error in the ModelState
-            }
+            var newTask = await _itemLogic.CreateTaskItem(item);
 
-            _context.TaskItems.Add(taskItem);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetTaskItem), new { id = taskItem.Id }, taskItem);
+            return CreatedAtAction(nameof(newTask), new { id = newTask.Id }, newTask);
         }
 
         // DELETE: api/TaskItems/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTaskItem(long id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<TaskItem>> DeleteItem(long id)
         {
-            var taskItem = await _context.TaskItems.FindAsync(id);
-            if (taskItem == null)
-            {
-                return NotFound();
-            }
-
-            _context.TaskItems.Remove(taskItem);
-            await _context.SaveChangesAsync();
+            var taskItem = await _itemLogic.DeleteTaskItem(id);
 
             return NoContent(); // Returns a HTTP 204, if delete was successful
         }

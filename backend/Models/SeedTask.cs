@@ -1,4 +1,5 @@
 ﻿using backend.Data;
+using backend.Models.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Models
@@ -21,7 +22,7 @@ namespace backend.Models
                     Name = "Complete Project Report",
                     Description = "Write the final report for the client project.",
                     DueDate = DateTime.Parse("2024-12-10"),
-                    Frequency = RepetitionCategory.Monthly,
+                    Frequency = TaskItem.RepetitionCategory.Monthly,
                     IsComplete = false
                 },
                 new TaskItem
@@ -29,7 +30,7 @@ namespace backend.Models
                     Name = "Prepare Presentation",
                     Description = "Prepare slides for the team presentation next week.",
                     DueDate = DateTime.Parse("2024-12-12"),
-                    Frequency = RepetitionCategory.Monthly,
+                    Frequency = TaskItem.RepetitionCategory.Monthly,
                     IsComplete = false
                 },
                 new TaskItem
@@ -37,7 +38,7 @@ namespace backend.Models
                     Name = "Fix Bugs in Code",
                     Description = "Address the top priority bugs in the codebase.",
                     DueDate = DateTime.Parse("2024-12-15"),
-                    Frequency = RepetitionCategory.Weekly,
+                    Frequency = TaskItem.RepetitionCategory.Weekly,
                     IsComplete = false
                 },
                 new TaskItem
@@ -45,7 +46,7 @@ namespace backend.Models
                     Name = "Client Meeting",
                     Description = "Attend the client meeting to discuss project milestones.",
                     DueDate = DateTime.Parse("2024-12-18"),
-                    Frequency = RepetitionCategory.Monthly,
+                    Frequency = TaskItem.RepetitionCategory.Monthly,
                     IsComplete = false
                 },
                 new TaskItem
@@ -53,7 +54,7 @@ namespace backend.Models
                     Name = "Backup Database",
                     Description = "Perform the routine database backup to ensure data safety.",
                     DueDate = DateTime.Parse("2024-12-20"),
-                    Frequency = RepetitionCategory.Yearly,
+                    Frequency = TaskItem.RepetitionCategory.Yearly,
                     IsComplete = false
                 }
             );

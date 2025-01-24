@@ -1,4 +1,4 @@
-﻿using backend.Models;
+﻿using backend.Models.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using System.Configuration;

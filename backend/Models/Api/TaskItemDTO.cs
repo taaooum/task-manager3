@@ -1,4 +1,4 @@
-﻿namespace backend.DataTransferObjects
+﻿namespace backend.Models.Api
 {
     public class TaskItemDTO
     {

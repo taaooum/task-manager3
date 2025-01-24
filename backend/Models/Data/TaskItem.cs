@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using backend.Data;
 
-namespace backend.Models
+namespace backend.Models.Data
 {
     public class TaskItem
     {
@@ -10,10 +9,17 @@ namespace backend.Models
         [Required]
         public string Name { get; set; } = null!;
         public string? Description { get; set; }
-        public DateTime? Reminder {  get; set; }
+        public DateTime? Reminder { get; set; }
         public DateTime? DueDate { get; set; }
         public RepetitionCategory Frequency { get; set; } = RepetitionCategory.None; // The interval/frequency of repetition for the task (e.g., Daily, Weekly)
         public bool IsComplete { get; set; } = false;
-        
+        public enum RepetitionCategory
+        {
+            None,
+            Dail1y,
+            Weekly,
+            Monthly,
+            Yearly
+        }
     }
 }
