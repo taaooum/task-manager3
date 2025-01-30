@@ -6,9 +6,12 @@ namespace backend.Models.Domain
     {
         [Key]
         public Guid Id { get; set; }
+        
         [Required]
-        public string Name { get; set; } = null!;
+        public string Title { get; set; } = String.Empty;
+        
         public string? Description { get; set; }
+        
         public IEnumerable<Item>? Items { get; set; }
     }
 }

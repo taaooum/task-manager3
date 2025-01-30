@@ -5,10 +5,10 @@ namespace backend.Repositories.Interfaces
 {
     public interface IItemRepository
     {
-        Task<List<Item>> GetAllItems();
+        Task<List<Item>?> GetAllItems();
         Task<Item?> GetItemById(Guid id);
-        void AddItem(Item bucket);
-        void UpdateItem(Item item);
-        void DeleteItem(Guid id);
+        Task AddItem(Item bucket);
+        Task UpdateItem(Guid id, Item item);
+        Task DeleteItem(Guid id);
     }
 }

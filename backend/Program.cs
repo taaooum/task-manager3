@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using backend.Data;
-using System.Configuration;
 using backend.Data.Seeds;
-using backend.Logic;
+using backend.Services;
 using backend.Repositories;
 
 namespace backend

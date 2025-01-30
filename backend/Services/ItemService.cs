@@ -1,66 +1,123 @@
 ﻿using backend.Models.Domain;
+using backend.Models.Api;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using backend.Repositories;
 using backend.Services.Exceptions;
+using backend.Services.Interfaces;
 
-namespace backend.Logic
+namespace backend.Services
 {
-    public class ItemService
+    public class ItemService : IItemService
     {
         private readonly ItemRepository _itemRepo;
 
         public ItemService(ItemRepository itemRepository) => _itemRepo = itemRepository;
 
-        public async Task<Item> GetTaskItem(Guid id)
+        public async Task<IEnumerable<ItemDto>> GetAllItems()
         {
-            var taskItem = await _itemRepo.GetItemById(id);
-            if (taskItem == null)
+            var items = await _itemRepo.GetAllItems();
+            if (items == null)
             {
-                throw new ItemNotFoundException(id); // Returns a HTTP 404, if the element gets not found
+                throw new ItemNotFoundException(); // No items were found
             }
-            return taskItem; // Returns element as JSON
-        }
-
-        public async Task<List<Item>> GetTaskItems()
-        {
-            var taskItems = await _context.TaskItems.ToListAsync();
-
-            if (taskItems == null)
+            // Convert Items to ItemDto list
+            //var ownersDto = owners.Adapt<IEnumerable<OwnerDto>>();
+            List<ItemDto> itemDtos = new List<ItemDto>();
+            foreach (var item in items)
             {
-                // TODO: eigene Exeption einbauen
-                throw new Exception("keine Items gefunden!"); // Returns a HTTP 404, if the element gets not found
-            }
-
-            return taskItems; // Returns all elements in a list as JSON
-        }
-
-        public async Task<Item> CreateTaskItem([FromBody] Item taskItem)
-        {
-            if (false)
-            {
-                throw new Exception(); // Returns a error in the ModelState
+                var itemDto = new ItemDto
+                {
+                    Id = item.Id,
+                    Title = item.Title,
+                    BucketId = item.BucketId,
+                    Description = item.Description,
+                    Reminder = item.Reminder,
+                    DueDate = item.DueDate,
+                    Frequency = item.Frequency,
+                    IsComplete = item.IsComplete
+                };
+                
+                itemDtos.Add(itemDto);
             }
 
-            _context.TaskItems.Add(taskItem);
-            await _context.SaveChangesAsync();
+            return itemDtos;
+        }
+        
+        public async Task<ItemDto> GetItemById(Guid id)
+        {
+            var item = await _itemRepo.GetItemById(id);
+            if (item == null)
+            {
+                throw new ItemNotFoundException(id); // Returns HTTP 404, if the element gets not found
+            }
+            //TODO: add Mapper Convert Item to ItemDto
+            //var ownersDto = owners.Adapt<IEnumerable<OwnerDto>>();
+            var itemDto = new ItemDto
+            {
+                Id = item.Id,
+                Title = item.Title,
+                BucketId = item.BucketId,
+                Description = item.Description,
+                Reminder = item.Reminder,
+                DueDate = item.DueDate,
+                Frequency = item.Frequency,
+                IsComplete = item.IsComplete
+            };
 
-            return taskItem;
+            return itemDto;
         }
 
-        public async Task<Item> DeleteTaskItem(long id)
+        public async Task<ItemDto> CreateItem([FromBody] ItemDto itemDto)
         {
-            var taskItem = await _context.TaskItems.FindAsync(id);
+            if (itemDto == null)
+            {
+                throw new ItemNotFoundException(); // Returns error in the ModelState
+            }
             
-            if (taskItem == null)
+            //TODO: add Mapper
+            var item = new Item{
+                Title = itemDto.Title,
+                BucketId = itemDto.BucketId,
+                Description = itemDto.Description,
+                Reminder = itemDto.Reminder,
+                DueDate = itemDto.DueDate,
+                Frequency = itemDto.Frequency,
+                IsComplete = itemDto.IsComplete
+            };
+            
+            await _itemRepo.AddItem(item);
+            
+            return itemDto;
+        }
+
+        public async Task UpdateItem (Guid id, [FromBody] ItemDto itemDto)
+        {
+            var item = await _itemRepo.GetItemById(id);
+            if (item == null)
             {
-                throw new Exception(); // NotfoundException
+                throw new ItemNotFoundException(id);
             }
-
-            _context.TaskItems.Remove(taskItem);
-            await _context.SaveChangesAsync();
-
-            return taskItem; // Returns a HTTP 204, if delete was successful
+            // TODO: replace with Mapper
+            item = new Item{
+                Title = itemDto.Title,
+                BucketId = itemDto.BucketId,
+                Description = itemDto.Description,
+                Reminder = itemDto.Reminder,
+                DueDate = itemDto.DueDate,
+                Frequency = itemDto.Frequency,
+                IsComplete = itemDto.IsComplete
+            };
+            
+            await _itemRepo.UpdateItem(id, item);
+        }
+        
+        public async Task DeleteItem(Guid id)
+        {
+            if (await _itemRepo.GetItemById(id) == null)
+            {
+                throw new ItemNotFoundException(id); 
+            }
+            await _itemRepo.DeleteItem(id);
         }
     }
 }

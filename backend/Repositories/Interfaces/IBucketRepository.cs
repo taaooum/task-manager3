@@ -4,10 +4,10 @@ namespace backend.Repositories.Interfaces
 {
     public interface IBucketRepository
     {
-        Task<List<Bucket>> GetAllBuckets();
+        Task<List<Bucket>?> GetAllBuckets();
         Task<Bucket?> GetBucketById(Guid id);
-        void AddBucket(Bucket bucket);
-        void UpdateBucket(Bucket bucket);
-        void DeleteBucket(Guid id);
+        Task AddBucket(Bucket bucket);
+        Task UpdateBucket(Guid id, Bucket bucket);
+        Task DeleteBucket(Guid id);
     }
 }

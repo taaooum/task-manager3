@@ -4,10 +4,10 @@ namespace backend.Services.Interfaces
 {
     public interface IItemService
     {
-        Task<IEnumerable<ItemDto>> GetAllAsync();
-        Task<ItemDto> GetByIdAsync(Guid itemId);
-        Task<ItemDto> CreateAsync();
-        Task UpdateAsync();
-        Task DeleteAsync();
+        Task<IEnumerable<ItemDto>> GetAllItems();
+        Task<ItemDto> GetItemById(Guid itemId);
+        Task<ItemDto> CreateItem(ItemDto item);
+        Task UpdateItem(Guid itemId, ItemDto itemDto);
+        Task DeleteItem(Guid itemId);
     }
 }
