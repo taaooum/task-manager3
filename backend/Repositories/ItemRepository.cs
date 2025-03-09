@@ -27,7 +27,7 @@ namespace backend.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateItem(Guid id, Item item) //TODO: Id entfernen da item an Update übergeben wird
+        public async Task UpdateItem(Item item) 
         {
             _context.Items.Update(item);
             await _context.SaveChangesAsync();

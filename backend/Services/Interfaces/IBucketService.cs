@@ -1,4 +1,5 @@
 ﻿using backend.Models.Api;
+using backend.Models.Domain;
 
 namespace backend.Services.Interfaces
 {
@@ -6,7 +7,7 @@ namespace backend.Services.Interfaces
     {
         Task<IEnumerable<BucketDto>> GetAllBuckets();
         Task<BucketDto> GetBucketById(Guid BucketId);
-        Task<BucketDto> CreateBucket(BucketDto bucketDto);
+        Task<Bucket> CreateBucket(BucketDto bucketDto);
         Task UpdateBucket(Guid BucketId, BucketDto bucketDto);
         Task DeleteBucket(Guid BucketId);
     }

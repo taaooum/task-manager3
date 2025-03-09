@@ -7,7 +7,5 @@ namespace backend.Models.Api
         public string Title { get; set; } = string.Empty;
 
         public string? Description { get; set; }
-
-        public IEnumerable<ItemDto>? Items { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace backend.Repositories.Interfaces
         Task<List<Item>?> GetAllItems();
         Task<Item?> GetItemById(Guid id);
         Task AddItem(Item bucket);
-        Task UpdateItem(Guid id, Item item);
+        Task UpdateItem(Item item);
         Task DeleteItem(Guid id);
     }
 }

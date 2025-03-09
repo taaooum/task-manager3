@@ -30,7 +30,7 @@ namespace backend.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateBucket(Guid id, Bucket bucket)
+        public async Task UpdateBucket(Bucket bucket)
         {
             _context.Buckets.Update(bucket);
             await _context.SaveChangesAsync();

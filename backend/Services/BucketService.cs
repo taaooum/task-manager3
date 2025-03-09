@@ -44,13 +44,13 @@ namespace backend.Services
             return bucketDto;
         }
 
-        public async Task<BucketDto> CreateBucket([FromBody] BucketDto bucketDto)
+        public async Task<Bucket> CreateBucket([FromBody] BucketDto bucketDto)
         {
             var bucket = BucketMapper.ToEntity(bucketDto);
 
             await _bucketRepo.AddBucket(bucket);
             
-            return bucketDto;
+            return bucket;
         }
 
         public async Task UpdateBucket (Guid id, [FromBody] BucketDto bucketDto)
@@ -61,9 +61,9 @@ namespace backend.Services
                 throw new ItemNotFoundException(id);
             }
 
-            bucket = BucketMapper.ToEntity(bucketDto);
+            bucket = BucketMapper.ToEntity(id, bucketDto);
             
-            await _bucketRepo.UpdateBucket(id, bucket);
+            await _bucketRepo.UpdateBucket(bucket);
         }
         
         public async Task DeleteBucket(Guid id)

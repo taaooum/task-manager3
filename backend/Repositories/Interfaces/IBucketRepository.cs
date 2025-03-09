@@ -7,7 +7,7 @@ namespace backend.Repositories.Interfaces
         Task<List<Bucket>?> GetAllBuckets();
         Task<Bucket?> GetBucketById(Guid id);
         Task AddBucket(Bucket bucket);
-        Task UpdateBucket(Guid id, Bucket bucket);
+        Task UpdateBucket(Bucket bucket);
         Task DeleteBucket(Guid id);
     }
 }

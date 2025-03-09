@@ -2,6 +2,7 @@
 using backend.Services;
 using backend.Models.Domain;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Sockets;
 
 namespace backend.Controllers
 {
@@ -13,19 +14,19 @@ namespace backend.Controllers
         public BucketController(BucketService bucketService) => _bucketService = bucketService;
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(Bucket), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BucketDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Bucket>> GetBucket(Guid id)
+        public async Task<ActionResult<BucketDto>> GetBucket(Guid id)
         {
-            var bucket = await _bucketService.GetBucketById(id);
+            BucketDto bucket = await _bucketService.GetBucketById(id);
             return Ok(bucket);
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(List<Bucket>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<Bucket>>> GetBuckets()
+        [ProducesResponseType(typeof(List<BucketDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<BucketDto>>> GetBuckets()
         {
-            var buckets = await _bucketService.GetAllBuckets();
+            IEnumerable<BucketDto> buckets = await _bucketService.GetAllBuckets();
             return Ok(buckets);
         }
 
@@ -34,8 +35,8 @@ namespace backend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Bucket>> CreateBucket([FromBody] BucketDto bucketDto)
         {
-            var bucket = await _bucketService.CreateBucket(bucketDto);
-            return CreatedAtAction(nameof(GetBucket), bucket);
+            Bucket bucket = await _bucketService.CreateBucket(bucketDto);
+            return CreatedAtAction(nameof(GetBucket), new { id = bucket.Id }, bucket);
         }
 
         [HttpDelete("{id}")]

@@ -2,6 +2,7 @@
 using backend.Models.Domain;
 using Microsoft.AspNetCore.Mvc;
 using backend.Services;
+using System.Net.Sockets;
 
 namespace backend.Controllers
 {
@@ -19,18 +20,18 @@ namespace backend.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ItemDto> GetItem(Guid id)
         {
-            var item = await _itemService.GetItemById(id); 
+            ItemDto item = await _itemService.GetItemById(id); 
             return item;
         }
 
         // GET: api/TaskItems
         [HttpGet("GetItems")]
-        [ProducesResponseType<Item>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ItemDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IEnumerable<ItemDto>> GetItemlist()
         {
-            var items = await _itemService.GetAllItems();
+            IEnumerable<ItemDto> items = await _itemService.GetAllItems();
             return items; 
         }
 
@@ -38,17 +39,17 @@ namespace backend.Controllers
         [HttpPost]
         [ProducesResponseType<Item>(StatusCodes.Status201Created, Type = typeof(Item))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<ItemDto>> CreateItem([FromBody] ItemDto itemDto)
+        public async Task<ActionResult<Item>> CreateItem([FromBody] ItemDto itemDto)
         {
-            var item = await _itemService.CreateItem(itemDto);
-            return CreatedAtAction(nameof(GetItem), item);
+            Item item = await _itemService.CreateItem(itemDto);
+            return CreatedAtAction(nameof(GetItem), new { id = item.Id }, item);
         }
 
         // DELETE: api/TaskItems/5
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ItemDto>> DeleteItem(Guid id)
+        public async Task<IActionResult> DeleteItem(Guid id)
         {
             await _itemService.DeleteItem(id);
             return NoContent(); // Returns a HTTP 204, if delete was successful

@@ -47,7 +47,7 @@ namespace backend.Services
             return itemDto;
         }
 
-        public async Task<ItemDto> CreateItem([FromBody] ItemDto itemDto)
+        public async Task<Item> CreateItem([FromBody] ItemDto itemDto)
         {
             if (itemDto == null)
             {
@@ -58,7 +58,7 @@ namespace backend.Services
 
             await _itemRepo.AddItem(item);
             
-            return itemDto;
+            return item;
         }
 
         public async Task UpdateItem (Guid id, [FromBody] ItemDto itemDto)
@@ -69,9 +69,9 @@ namespace backend.Services
                 throw new ItemNotFoundException(id);
             }
 
-            item = ItemMapper.ToEntity(itemDto);
+            item = ItemMapper.ToEntity(id, itemDto);
 
-            await _itemRepo.UpdateItem(id, item);
+            await _itemRepo.UpdateItem(item);
         }
         
         public async Task DeleteItem(Guid id)
