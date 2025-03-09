@@ -1,11 +1,10 @@
 ﻿using backend.Models.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Models.Api
 {
     public class ItemDto
     {
-        public Guid Id { get; set; }
-        
         public string Title { get; set; } = string.Empty;
 
         public Guid BucketId { get; set; }
@@ -16,7 +15,7 @@ namespace backend.Models.Api
 
         public DateTime? DueDate { get; set; }
 
-        public RepetitionCategory Frequency { get; set; } = RepetitionCategory.None;
+        public Repetition Frequency { get; set; } = Repetition.None;
 
         public bool IsComplete { get; set; } = false;
     }

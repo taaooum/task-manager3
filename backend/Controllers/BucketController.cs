@@ -35,7 +35,7 @@ namespace backend.Controllers
         public async Task<ActionResult<Bucket>> CreateBucket([FromBody] BucketDto bucketDto)
         {
             var bucket = await _bucketService.CreateBucket(bucketDto);
-            return CreatedAtAction(nameof(GetBucket), new { id = bucket.Id }, bucket);
+            return CreatedAtAction(nameof(GetBucket), bucket);
         }
 
         [HttpDelete("{id}")]

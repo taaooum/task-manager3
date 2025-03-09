@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using backend.Repositories;
 using backend.Services.Exceptions;
 using backend.Services.Interfaces;
+using backend.Services.Mappers;
 
 namespace backend.Services
 {
@@ -20,23 +21,13 @@ namespace backend.Services
             {
                 throw new ItemNotFoundException(); // No items were found
             }
-            // Convert Items to ItemDto list
-            //var ownersDto = owners.Adapt<IEnumerable<OwnerDto>>();
+
+            // Convert Items to ItemDtos list
             List<ItemDto> itemDtos = new List<ItemDto>();
             foreach (var item in items)
             {
-                var itemDto = new ItemDto
-                {
-                    Id = item.Id,
-                    Title = item.Title,
-                    BucketId = item.BucketId,
-                    Description = item.Description,
-                    Reminder = item.Reminder,
-                    DueDate = item.DueDate,
-                    Frequency = item.Frequency,
-                    IsComplete = item.IsComplete
-                };
-                
+                var itemDto = ItemMapper.ToDto(item);
+
                 itemDtos.Add(itemDto);
             }
 
@@ -50,19 +41,8 @@ namespace backend.Services
             {
                 throw new ItemNotFoundException(id); // Returns HTTP 404, if the element gets not found
             }
-            //TODO: add Mapper Convert Item to ItemDto
-            //var ownersDto = owners.Adapt<IEnumerable<OwnerDto>>();
-            var itemDto = new ItemDto
-            {
-                Id = item.Id,
-                Title = item.Title,
-                BucketId = item.BucketId,
-                Description = item.Description,
-                Reminder = item.Reminder,
-                DueDate = item.DueDate,
-                Frequency = item.Frequency,
-                IsComplete = item.IsComplete
-            };
+
+            var itemDto = ItemMapper.ToDto(item);
 
             return itemDto;
         }
@@ -74,17 +54,8 @@ namespace backend.Services
                 throw new ItemNotFoundException(); // Returns error in the ModelState
             }
             
-            //TODO: add Mapper
-            var item = new Item{
-                Title = itemDto.Title,
-                BucketId = itemDto.BucketId,
-                Description = itemDto.Description,
-                Reminder = itemDto.Reminder,
-                DueDate = itemDto.DueDate,
-                Frequency = itemDto.Frequency,
-                IsComplete = itemDto.IsComplete
-            };
-            
+            var item = ItemMapper.ToEntity(itemDto);
+
             await _itemRepo.AddItem(item);
             
             return itemDto;
@@ -97,17 +68,9 @@ namespace backend.Services
             {
                 throw new ItemNotFoundException(id);
             }
-            // TODO: replace with Mapper
-            item = new Item{
-                Title = itemDto.Title,
-                BucketId = itemDto.BucketId,
-                Description = itemDto.Description,
-                Reminder = itemDto.Reminder,
-                DueDate = itemDto.DueDate,
-                Frequency = itemDto.Frequency,
-                IsComplete = itemDto.IsComplete
-            };
-            
+
+            item = ItemMapper.ToEntity(itemDto);
+
             await _itemRepo.UpdateItem(id, item);
         }
         

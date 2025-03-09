@@ -4,6 +4,7 @@ using backend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using backend.Repositories;
 using backend.Services.Exceptions;
+using backend.Services.Mappers;
 
 namespace backend.Services
 {
@@ -24,16 +25,10 @@ namespace backend.Services
             List<BucketDto> bucketDtos = new List<BucketDto>();
             foreach (var bucket in buckets)
             {
-                var bucketDto = new BucketDto
-                {
-                    Id = bucket.Id,
-                    Title = bucket.Title,
-                    Description = bucket.Description,
-                };
-                
+                var bucketDto = BucketMapper.ToDto(bucket);
+
                 bucketDtos.Add(bucketDto);
             }
-
             return bucketDtos;
         }
         
@@ -44,25 +39,15 @@ namespace backend.Services
             {
                 throw new ItemNotFoundException(id); // Returns HTTP 404, if the element gets not found
             }
-            
-            var bucketDto = new BucketDto
-            {
-                Id = bucket.Id,
-                Title = bucket.Title,
-                Description = bucket.Description
-            };
+            var bucketDto = BucketMapper.ToDto(bucket);
 
             return bucketDto;
         }
 
         public async Task<BucketDto> CreateBucket([FromBody] BucketDto bucketDto)
         {
-            //TODO: add Mapper
-            var bucket = new Bucket{
-                Title = bucketDto.Title,
-                Description = bucketDto.Description
-            };
-            
+            var bucket = BucketMapper.ToEntity(bucketDto);
+
             await _bucketRepo.AddBucket(bucket);
             
             return bucketDto;
@@ -75,11 +60,8 @@ namespace backend.Services
             {
                 throw new ItemNotFoundException(id);
             }
-            // TODO: replace with Mapper
-            bucket = new Bucket{
-                Title = bucketDto.Title,
-                Description = bucketDto.Description
-            };
+
+            bucket = BucketMapper.ToEntity(bucketDto);
             
             await _bucketRepo.UpdateBucket(id, bucket);
         }

@@ -1,6 +1,6 @@
 namespace backend.Models.Domain
 {
-    public enum RepetitionCategory
+    public enum Repetition
     {
         None,
         Daily,

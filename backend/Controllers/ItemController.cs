@@ -41,7 +41,7 @@ namespace backend.Controllers
         public async Task<ActionResult<ItemDto>> CreateItem([FromBody] ItemDto itemDto)
         {
             var item = await _itemService.CreateItem(itemDto);
-            return CreatedAtAction(nameof(GetItem), new { id = item.Id }, item);
+            return CreatedAtAction(nameof(GetItem), item);
         }
 
         // DELETE: api/TaskItems/5

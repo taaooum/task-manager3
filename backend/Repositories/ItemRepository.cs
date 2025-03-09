@@ -2,6 +2,7 @@
 using backend.Models.Domain;
 using backend.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Sockets;
 
 namespace backend.Repositories
 {
@@ -12,7 +13,7 @@ namespace backend.Repositories
 
         public async Task<List<Item>?> GetAllItems()
         {
-            return await _context.Items.ToListAsync();
+            return await _context.Items.ToListAsync(); 
         }
 
         public async Task<Item?> GetItemById(Guid id)

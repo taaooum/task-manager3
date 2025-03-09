@@ -1,14 +1,18 @@
 ﻿using backend.Data;
 using backend.Models.Domain;
-using Microsoft.EntityFrameworkCore;
 using backend.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace backend.Repositories
 {
     public class BucketRepository : IBucketRepository
     {
         private readonly RepositoryDbContext _context;
-        public BucketRepository(RepositoryDbContext dbContext) => _context = dbContext;
+        public BucketRepository(RepositoryDbContext supabaseContext) => _context = supabaseContext;
 
         public async Task<List<Bucket>?> GetAllBuckets()
         {

@@ -1,8 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using backend.Data;
-using backend.Data.Seeds;
 using backend.Services;
 using backend.Repositories;
+using Microsoft.EntityFrameworkCore;
+using backend.Data;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace backend
 {
@@ -14,6 +14,11 @@ namespace backend
             var builder = WebApplication.CreateBuilder(args);
 
             // Dependency Injection (DI) and Inversion of Control (IoC) Container Configuration
+
+            // DbContext mit PostgreSQL registrieren
+            builder.Services.AddDbContext<RepositoryDbContext>(options =>
+                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
             builder.Services.AddScoped<BucketRepository>();
             builder.Services.AddScoped<ItemRepository>(); 
 
@@ -21,10 +26,6 @@ namespace backend
             builder.Services.AddScoped<ItemService>();
 
             builder.Services.AddControllers(); // Add controllers to the DI container to handle API requests
-
-            // Add DbContext to connect to the SQL Server database
-            builder.Services.AddDbContext<RepositoryDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             // Add services for API documentation generation using Swagger
             builder.Services.AddEndpointsApiExplorer();
@@ -36,13 +37,6 @@ namespace backend
             var app = builder.Build();
             {
                 // Middleware Configuration - Set up the HTTP request pipeline
-
-                // Initialize seed data if necessary
-                using (var scope = app.Services.CreateScope())
-                {
-                    // Call the SeedTask.Initialize method to add initial data to the database
-                    SeedTask.Initialize(scope.ServiceProvider);
-                }
 
                 // If the environment is development, enable Swagger for API documentation
                 if (app.Environment.IsDevelopment())
