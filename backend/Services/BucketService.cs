@@ -16,16 +16,16 @@ namespace backend.Services
 
         public async Task<IEnumerable<BucketDto>> GetAllBuckets()
         {
-            var buckets = await _bucketRepo.GetAllBuckets();
+            List<Bucket>? buckets = await _bucketRepo.GetAllBuckets();
             if (buckets == null)
             {
                 throw new BucketNotFoundException(); // No items were found
             }
             
             List<BucketDto> bucketDtos = new List<BucketDto>();
-            foreach (var bucket in buckets)
+            foreach (Bucket bucket in buckets)
             {
-                var bucketDto = BucketMapper.ToDto(bucket);
+                BucketDto bucketDto = BucketMapper.ToDto(bucket);
 
                 bucketDtos.Add(bucketDto);
             }
@@ -34,19 +34,19 @@ namespace backend.Services
         
         public async Task<BucketDto> GetBucketById(Guid id)
         {
-            var bucket = await _bucketRepo.GetBucketById(id);
+            Bucket? bucket = await _bucketRepo.GetBucketById(id);
             if (bucket == null)
             {
                 throw new ItemNotFoundException(id); // Returns HTTP 404, if the element gets not found
             }
-            var bucketDto = BucketMapper.ToDto(bucket);
+            BucketDto bucketDto = BucketMapper.ToDto(bucket);
 
             return bucketDto;
         }
 
         public async Task<Bucket> CreateBucket([FromBody] BucketDto bucketDto)
         {
-            var bucket = BucketMapper.ToEntity(bucketDto);
+            Bucket bucket = BucketMapper.ToEntity(bucketDto);
 
             await _bucketRepo.AddBucket(bucket);
             
@@ -55,7 +55,7 @@ namespace backend.Services
 
         public async Task UpdateBucket (Guid id, [FromBody] BucketDto bucketDto)
         {
-            var bucket = await _bucketRepo.GetBucketById(id);
+            Bucket? bucket = await _bucketRepo.GetBucketById(id);
             if (bucket == null)
             {
                 throw new ItemNotFoundException(id);

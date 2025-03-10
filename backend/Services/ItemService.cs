@@ -16,7 +16,7 @@ namespace backend.Services
 
         public async Task<IEnumerable<ItemDto>> GetAllItems()
         {
-            var items = await _itemRepo.GetAllItems();
+            List<Item>? items = await _itemRepo.GetAllItems();
             if (items == null)
             {
                 throw new ItemNotFoundException(); // No items were found
@@ -24,9 +24,9 @@ namespace backend.Services
 
             // Convert Items to ItemDtos list
             List<ItemDto> itemDtos = new List<ItemDto>();
-            foreach (var item in items)
+            foreach (Item item in items)
             {
-                var itemDto = ItemMapper.ToDto(item);
+                ItemDto itemDto = ItemMapper.ToDto(item);
 
                 itemDtos.Add(itemDto);
             }
@@ -36,13 +36,13 @@ namespace backend.Services
         
         public async Task<ItemDto> GetItemById(Guid id)
         {
-            var item = await _itemRepo.GetItemById(id);
+            Item? item = await _itemRepo.GetItemById(id);
             if (item == null)
             {
                 throw new ItemNotFoundException(id); // Returns HTTP 404, if the element gets not found
             }
 
-            var itemDto = ItemMapper.ToDto(item);
+            ItemDto itemDto = ItemMapper.ToDto(item);
 
             return itemDto;
         }
@@ -54,7 +54,7 @@ namespace backend.Services
                 throw new ItemNotFoundException(); // Returns error in the ModelState
             }
             
-            var item = ItemMapper.ToEntity(itemDto);
+            Item item = ItemMapper.ToEntity(itemDto);
 
             await _itemRepo.AddItem(item);
             
@@ -63,7 +63,7 @@ namespace backend.Services
 
         public async Task UpdateItem (Guid id, [FromBody] ItemDto itemDto)
         {
-            var item = await _itemRepo.GetItemById(id);
+            Item? item = await _itemRepo.GetItemById(id);
             if (item == null)
             {
                 throw new ItemNotFoundException(id);
