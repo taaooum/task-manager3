@@ -1,4 +1,4 @@
-// File: D:\Dev\WebDev\task-manager3\frontend\app\page.tsx
+// File: /Users/tom/Dev/task-manager3/frontend/app/page.tsx
 import * as entry from '../../../app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
