@@ -1,10 +1,4 @@
 ﻿namespace backend.Services.Exceptions
 {
-    public abstract class BadRequestException : Exception
-    {
-        protected BadRequestException(string message)
-            : base(message)
-        {
-        }
-    }
+    public abstract class BadRequestException(string message) : Exception(message);
 }

@@ -2,45 +2,41 @@
 using backend.Models.Domain;
 using backend.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Net.Sockets;
 
 namespace backend.Repositories
 {
-    public class ItemRepository : IItemRepository
+    public class ItemRepository(RepositoryDbContext dbContext) : IItemRepository
     {
-        private readonly RepositoryDbContext _context;
-        public ItemRepository(RepositoryDbContext dbContext) => _context = dbContext;
-
         public async Task<List<Item>?> GetAllItems()
         {
-            return await _context.Items.ToListAsync(); 
+            return await dbContext.Items.ToListAsync(); 
         }
 
         public async Task<Item?> GetItemById(Guid id)
         {
-            return await _context.Items.FindAsync(id);
+            return await dbContext.Items.FindAsync(id);
         }
 
         public async Task AddItem(Item item)
         {
-            _context.Items.Add(item);
-            await _context.SaveChangesAsync();
+            dbContext.Items.Add(item);
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task UpdateItem(Item item) 
         {
-            _context.Items.Update(item);
-            await _context.SaveChangesAsync();
+            dbContext.Items.Update(item);
+            await dbContext.SaveChangesAsync();
         }
         
         public async Task DeleteItem(Guid id)
         {
-            var item = await _context.Items.FindAsync(id);
+            var item = await dbContext.Items.FindAsync(id);
             if (item != null)
             {
-                _context.Remove(item);
+                dbContext.Remove(item);
             }
-            await _context.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
         }
     }
 }

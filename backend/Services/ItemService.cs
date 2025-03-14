@@ -8,35 +8,31 @@ using backend.Services.Mappers;
 
 namespace backend.Services
 {
-    public class ItemService : IItemService
+    public class ItemService(ItemRepository itemRepository) : IItemService
     {
-        private readonly ItemRepository _itemRepo;
-
-        public ItemService(ItemRepository itemRepository) => _itemRepo = itemRepository;
-
         public async Task<IEnumerable<ItemDto>> GetAllItems()
         {
-            List<Item>? items = await _itemRepo.GetAllItems();
+            List<Item>? items = await itemRepository.GetAllItems();
             if (items == null)
             {
                 throw new ItemNotFoundException(); // No items were found
             }
 
-            // Convert Items to ItemDtos list
-            List<ItemDto> itemDtos = new List<ItemDto>();
+            // Convert Items to itemDtoList
+            List<ItemDto> itemDtoList = new List<ItemDto>();
             foreach (Item item in items)
             {
                 ItemDto itemDto = ItemMapper.ToDto(item);
 
-                itemDtos.Add(itemDto);
+                itemDtoList.Add(itemDto);
             }
 
-            return itemDtos;
+            return itemDtoList;
         }
         
         public async Task<ItemDto> GetItemById(Guid id)
         {
-            Item? item = await _itemRepo.GetItemById(id);
+            Item? item = await itemRepository.GetItemById(id);
             if (item == null)
             {
                 throw new ItemNotFoundException(id); // Returns HTTP 404, if the element gets not found
@@ -47,40 +43,38 @@ namespace backend.Services
             return itemDto;
         }
 
-        public async Task<Item> CreateItem([FromBody] ItemDto itemDto)
+        public async Task<Item> CreateItem([FromBody] CreateItem createItem)
         {
-            if (itemDto == null)
-            {
-                throw new ItemNotFoundException(); // Returns error in the ModelState
-            }
-            
-            Item item = ItemMapper.ToEntity(itemDto);
+            if (createItem == null)
+                throw new ArgumentNullException(nameof(createItem), "Item cannot be null.");
 
-            await _itemRepo.AddItem(item);
+            Item item = ItemMapper.ToEntity(createItem);
+
+            await itemRepository.AddItem(item);
             
             return item;
         }
 
         public async Task UpdateItem (Guid id, [FromBody] ItemDto itemDto)
         {
-            Item? item = await _itemRepo.GetItemById(id);
+            if (id != itemDto.Id)
+                throw new BadHttpRequestException("Bucket Id mismatch");
+
+            Item? item = await itemRepository.GetItemById(id);
             if (item == null)
-            {
                 throw new ItemNotFoundException(id);
-            }
+            
+            item = ItemMapper.ToEntity(itemDto);
 
-            item = ItemMapper.ToEntity(id, itemDto);
-
-            await _itemRepo.UpdateItem(item);
+            await itemRepository.UpdateItem(item);
         }
         
         public async Task DeleteItem(Guid id)
         {
-            if (await _itemRepo.GetItemById(id) == null)
-            {
+            if (await itemRepository.GetItemById(id) == null)
                 throw new ItemNotFoundException(id); 
-            }
-            await _itemRepo.DeleteItem(id);
+            
+            await itemRepository.DeleteItem(id);
         }
     }
 }

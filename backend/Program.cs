@@ -8,14 +8,13 @@ namespace backend
 {
     public class Program
     {
-        // Main entry point of the application
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             // Dependency Injection (DI) and Inversion of Control (IoC) Container Configuration
 
-            // DbContext mit PostgreSQL registrieren
+            // A new Context for Postgresql Database
             builder.Services.AddDbContext<RepositoryDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -25,9 +24,7 @@ namespace backend
             builder.Services.AddScoped<BucketService>();
             builder.Services.AddScoped<ItemService>();
 
-            builder.Services.AddControllers(); // Add controllers to the DI container to handle API requests
-
-            // Add services for API documentation generation using Swagger
+            builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -41,8 +38,8 @@ namespace backend
                 // If the environment is development, enable Swagger for API documentation
                 if (app.Environment.IsDevelopment())
                 {
-                    app.UseSwagger();               // Enable Swagger middleware
-                    app.UseSwaggerUI();            // Enable Swagger UI for user-friendly API interaction
+                    app.UseSwagger();            
+                    app.UseSwaggerUI();
                 }
                
                 app.UseHttpsRedirection();  // Enable HTTPS redirection for secure communication

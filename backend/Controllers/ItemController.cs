@@ -2,57 +2,53 @@
 using backend.Models.Domain;
 using Microsoft.AspNetCore.Mvc;
 using backend.Services;
-using System.Net.Sockets;
 
 namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ItemController : ControllerBase
+    public class ItemController(ItemService itemService) : ControllerBase
     {
-        private readonly ItemService _itemService;
-        public ItemController(ItemService itemService) => _itemService = itemService;
-        
-        // GET: api/TaskItem
+        // ROUTE - GET: api/TaskItem
         [HttpGet("GetItem{id}")]
         [ProducesResponseType<Item>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ItemDto> GetItem(Guid id)
         {
-            ItemDto item = await _itemService.GetItemById(id); 
+            ItemDto item = await itemService.GetItemById(id); 
             return item;
         }
 
-        // GET: api/TaskItems
+        // ROUTE - GET: api/TaskItems
         [HttpGet("GetItems")]
         [ProducesResponseType<ItemDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IEnumerable<ItemDto>> GetItemlist()
+        public async Task<IEnumerable<ItemDto>> GetAllItems()
         {
-            IEnumerable<ItemDto> items = await _itemService.GetAllItems();
+            IEnumerable<ItemDto> items = await itemService.GetAllItems();
             return items; 
         }
 
-        // POST: api/TaskItem
+        // ROUTE - POST: api/TaskItem
         [HttpPost]
         [ProducesResponseType<Item>(StatusCodes.Status201Created, Type = typeof(Item))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Item>> CreateItem([FromBody] ItemDto itemDto)
+        public async Task<ActionResult<Item>> CreateItem([FromBody] CreateItem createItem)
         {
-            Item item = await _itemService.CreateItem(itemDto);
+            Item item = await itemService.CreateItem(createItem);
             return CreatedAtAction(nameof(GetItem), new { id = item.Id }, item);
         }
 
-        // DELETE: api/TaskItems/5
+        // ROUTE - DELETE: api/TaskItems/5
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteItem(Guid id)
         {
-            await _itemService.DeleteItem(id);
-            return NoContent(); // Returns a HTTP 204, if delete was successful
+            await itemService.DeleteItem(id);
+            return NoContent(); // Returns an HTTP 204, if delete was successful
         }
     }
 }

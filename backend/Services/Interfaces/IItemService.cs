@@ -7,7 +7,7 @@ namespace backend.Services.Interfaces
     {
         Task<IEnumerable<ItemDto>> GetAllItems();
         Task<ItemDto> GetItemById(Guid itemId);
-        Task<Item> CreateItem(ItemDto item);
+        Task<Item> CreateItem(CreateItem createItem);
         Task UpdateItem(Guid itemId, ItemDto itemDto);
         Task DeleteItem(Guid itemId);
     }

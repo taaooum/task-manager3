@@ -6,9 +6,9 @@ namespace backend.Services.Interfaces
     public interface IBucketService
     {
         Task<IEnumerable<BucketDto>> GetAllBuckets();
-        Task<BucketDto> GetBucketById(Guid BucketId);
-        Task<Bucket> CreateBucket(BucketDto bucketDto);
-        Task UpdateBucket(Guid BucketId, BucketDto bucketDto);
-        Task DeleteBucket(Guid BucketId);
+        Task<BucketDto> GetBucketById(Guid bucketId);
+        Task<Bucket> CreateBucket(CreateBucket createBucket);
+        Task UpdateBucket(Guid bucketId, BucketDto bucketDto);
+        Task DeleteBucket(Guid bucketId);
     }
 }

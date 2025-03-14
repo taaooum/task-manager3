@@ -2,48 +2,41 @@
 using backend.Models.Domain;
 using backend.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace backend.Repositories
 {
-    public class BucketRepository : IBucketRepository
+    public class BucketRepository(RepositoryDbContext dbContext) : IBucketRepository
     {
-        private readonly RepositoryDbContext _context;
-        public BucketRepository(RepositoryDbContext supabaseContext) => _context = supabaseContext;
-
         public async Task<List<Bucket>?> GetAllBuckets()
         {
-            return await _context.Buckets.ToListAsync();
+            return await dbContext.Buckets.ToListAsync();
         }
 
         public async Task<Bucket?> GetBucketById(Guid id)
         {
-            return await _context.Buckets.FindAsync(id);
+            return await dbContext.Buckets.FindAsync(id);
         }
 
         public async Task AddBucket(Bucket bucket)
         {
-            _context.Buckets.Add(bucket);
-            await _context.SaveChangesAsync();
+            dbContext.Buckets.Add(bucket);
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task UpdateBucket(Bucket bucket)
         {
-            _context.Buckets.Update(bucket);
-            await _context.SaveChangesAsync();
+            dbContext.Buckets.Update(bucket);
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task DeleteBucket(Guid id)
         {
-            var bucket = await _context.Buckets.FindAsync(id);
+            var bucket = await dbContext.Buckets.FindAsync(id);
             if (bucket != null)
             {
-                _context.Remove(bucket);
+                dbContext.Remove(bucket);
             }
-            await _context.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
         }
     }
 }

@@ -8,71 +8,71 @@ using backend.Services.Mappers;
 
 namespace backend.Services
 {
-    public class BucketService : IBucketService
+    public class BucketService(BucketRepository bucketRepository) : IBucketService
     {
-        private readonly BucketRepository _bucketRepo;
-
-        public BucketService(BucketRepository bucketRepository) => _bucketRepo = bucketRepository;
-
         public async Task<IEnumerable<BucketDto>> GetAllBuckets()
         {
-            List<Bucket>? buckets = await _bucketRepo.GetAllBuckets();
-            if (buckets == null)
-            {
-                throw new BucketNotFoundException(); // No items were found
-            }
+            List<Bucket>? buckets = await bucketRepository.GetAllBuckets();
             
-            List<BucketDto> bucketDtos = new List<BucketDto>();
+            if (buckets == null)
+                throw new BucketNotFoundException(); // No items were found
+            
+            
+            List<BucketDto> bucketDtoList = new List<BucketDto>();
             foreach (Bucket bucket in buckets)
             {
                 BucketDto bucketDto = BucketMapper.ToDto(bucket);
 
-                bucketDtos.Add(bucketDto);
+                bucketDtoList.Add(bucketDto);
             }
-            return bucketDtos;
+            return bucketDtoList;
         }
         
         public async Task<BucketDto> GetBucketById(Guid id)
         {
-            Bucket? bucket = await _bucketRepo.GetBucketById(id);
+            Bucket? bucket = await bucketRepository.GetBucketById(id);
+            
             if (bucket == null)
-            {
                 throw new ItemNotFoundException(id); // Returns HTTP 404, if the element gets not found
-            }
+            
             BucketDto bucketDto = BucketMapper.ToDto(bucket);
 
             return bucketDto;
         }
 
-        public async Task<Bucket> CreateBucket([FromBody] BucketDto bucketDto)
+        public async Task<Bucket> CreateBucket([FromBody] CreateBucket createBucket)
         {
-            Bucket bucket = BucketMapper.ToEntity(bucketDto);
+            if (createBucket == null)
+                throw new ArgumentNullException(nameof(createBucket), "Bucket cannot be null.");
+            
+            Bucket bucket = BucketMapper.ToEntity(createBucket);
 
-            await _bucketRepo.AddBucket(bucket);
+            await bucketRepository.AddBucket(bucket);
             
             return bucket;
         }
 
         public async Task UpdateBucket (Guid id, [FromBody] BucketDto bucketDto)
         {
-            Bucket? bucket = await _bucketRepo.GetBucketById(id);
-            if (bucket == null)
-            {
-                throw new ItemNotFoundException(id);
-            }
-
-            bucket = BucketMapper.ToEntity(id, bucketDto);
+            if (id != bucketDto.Id)
+                throw new BadHttpRequestException("Bucket Id mismatch");
             
-            await _bucketRepo.UpdateBucket(bucket);
+            Bucket? bucket = await bucketRepository.GetBucketById(id);
+            
+            if (bucket == null)
+                throw new ItemNotFoundException(id);
+            
+            bucket = BucketMapper.ToEntity(bucketDto);
+            
+            await bucketRepository.UpdateBucket(bucket);
         }
         
         public async Task DeleteBucket(Guid id)
         {
-            if (await _bucketRepo.GetBucketById(id) == null)
-            {
+            if (await bucketRepository.GetBucketById(id) == null)
                 throw new ItemNotFoundException(id); 
-            }
-            await _bucketRepo.DeleteBucket(id);
+            
+            await bucketRepository.DeleteBucket(id);
         }
     }
 }
