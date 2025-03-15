@@ -1,0 +1,4 @@
+
+const paths = {
+    dashboard: "/dashboard",
+}

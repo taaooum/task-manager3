@@ -7,11 +7,6 @@ Thumbs.db
 appsettings.json
 appsettings.*.json
 
-# Frontend ignorieren
-/frontend/node_modules/
-/frontend/dist/
-/frontend/npm-debug.log*
-
 # Backend ignorieren
 /backend/bin/
 /backend/obj/
