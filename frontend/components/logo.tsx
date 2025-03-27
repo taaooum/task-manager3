@@ -1,14 +1,7 @@
-import Link from "next/link";
-import Image from "next/image";
+const Logo = ({  }: { className?: string }) => {
 
-const Logo = ({ className }: { className?: string }) => {
-    return (
-        <Link href="/">
-
-        </Link>
-    );
 };
 
-Logo.displayName = "Logo"
+Logo.displayName = "Logo";
 
-export default {Logo};
+export default Logo;

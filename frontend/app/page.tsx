@@ -1,9 +1,6 @@
-import Image from "next/image";
-import Link
- from "next/link";
-import { redirect } from 'next/navigation';
+import { redirect } from "next/navigation";
+import paths from "@/lib/paths";
 
 export default function Home() {
-    redirect(paths.dashboard);
-    return null;
+  redirect(paths.dashboard);
 }
