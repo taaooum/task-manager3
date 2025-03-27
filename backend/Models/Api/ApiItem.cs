@@ -1,10 +1,14 @@
-﻿using backend.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using backend.Enums;
 
 namespace backend.Models.Api
 {
     public class ApiItem
     {
+        [Key]
         public Guid Id { get; set; }
+        
+        [Required]
         public string Title { get; set; } = String.Empty;
 
         public Guid BucketId { get; set; }

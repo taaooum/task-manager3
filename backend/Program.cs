@@ -1,8 +1,6 @@
 using backend.Services;
 using backend.Repositories;
 using Microsoft.EntityFrameworkCore;
-using backend.Data;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace backend
 {
@@ -15,7 +13,7 @@ namespace backend
             // Dependency Injection (DI) and Inversion of Control (IoC) Container Configuration
 
             // A new Context for Postgresql Database
-            builder.Services.AddDbContext<RepositoryDbContext>(options =>
+            builder.Services.AddDbContext<DataContextService>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddScoped<BucketRepository>();

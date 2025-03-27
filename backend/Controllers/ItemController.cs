@@ -11,9 +11,10 @@ namespace backend.Controllers
     {
         // ROUTE - GET: api/TaskItem
         [HttpGet("GetItem{id}")]
-        [ProducesResponseType<Item>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiItem>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ApiItem> GetItem(Guid id)
         {
             ApiItem apiItem = await itemService.GetItemById(id); 
@@ -25,6 +26,7 @@ namespace backend.Controllers
         [ProducesResponseType<ApiItem>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IEnumerable<ApiItem>> GetAllItems()
         {
             IEnumerable<ApiItem> items = await itemService.GetAllItems();
@@ -33,22 +35,33 @@ namespace backend.Controllers
 
         // ROUTE - POST: api/TaskItem
         [HttpPost]
-        [ProducesResponseType<Item>(StatusCodes.Status201Created, Type = typeof(Item))]
+        [ProducesResponseType<Guid>(StatusCodes.Status201Created, Type = typeof(Item))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Item>> CreateItem([FromBody] ApiItemCreate apiItemCreate)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<Guid>> CreateItem([FromBody] ApiItemCreate apiItemCreate)
         {
             Item item = await itemService.CreateItem(apiItemCreate);
-            return CreatedAtAction(nameof(GetItem), new { id = item.Id }, item);
+            return Created($"/api/buckets/{item.Id}", item.Id);
+        }
+        
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task UpdateBucket(Guid id, [FromBody] ApiItem apiItem)
+        {
+            await itemService.UpdateItem(id, apiItem);
         }
 
         // ROUTE - DELETE: api/TaskItems/5
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteItem(Guid id)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task DeleteItem(Guid id)
         {
             await itemService.DeleteItem(id);
-            return NoContent(); // Returns an HTTP 204, if delete was successful
         }
     }
 }
