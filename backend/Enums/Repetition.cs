@@ -1,4 +1,4 @@
-namespace backend.Models.Domain
+namespace backend.Enums
 {
     public enum Repetition
     {

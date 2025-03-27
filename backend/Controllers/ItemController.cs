@@ -14,20 +14,20 @@ namespace backend.Controllers
         [ProducesResponseType<Item>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ItemDto> GetItem(Guid id)
+        public async Task<ApiItem> GetItem(Guid id)
         {
-            ItemDto item = await itemService.GetItemById(id); 
-            return item;
+            ApiItem apiItem = await itemService.GetItemById(id); 
+            return apiItem;
         }
 
         // ROUTE - GET: api/TaskItems
         [HttpGet("GetItems")]
-        [ProducesResponseType<ItemDto>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiItem>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IEnumerable<ItemDto>> GetAllItems()
+        public async Task<IEnumerable<ApiItem>> GetAllItems()
         {
-            IEnumerable<ItemDto> items = await itemService.GetAllItems();
+            IEnumerable<ApiItem> items = await itemService.GetAllItems();
             return items; 
         }
 
@@ -35,9 +35,9 @@ namespace backend.Controllers
         [HttpPost]
         [ProducesResponseType<Item>(StatusCodes.Status201Created, Type = typeof(Item))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Item>> CreateItem([FromBody] CreateItem createItem)
+        public async Task<ActionResult<Item>> CreateItem([FromBody] ApiItemCreate apiItemCreate)
         {
-            Item item = await itemService.CreateItem(createItem);
+            Item item = await itemService.CreateItem(apiItemCreate);
             return CreatedAtAction(nameof(GetItem), new { id = item.Id }, item);
         }
 

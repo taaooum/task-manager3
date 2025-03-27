@@ -5,10 +5,10 @@ namespace backend.Services.Interfaces
 {
     public interface IItemService
     {
-        Task<IEnumerable<ItemDto>> GetAllItems();
-        Task<ItemDto> GetItemById(Guid itemId);
-        Task<Item> CreateItem(CreateItem createItem);
-        Task UpdateItem(Guid itemId, ItemDto itemDto);
+        Task<IEnumerable<ApiItem>> GetAllItems();
+        Task<ApiItem> GetItemById(Guid itemId);
+        Task<Item> CreateItem(ApiItemCreate apiItemCreate);
+        Task UpdateItem(Guid itemId, ApiItem apiItem);
         Task DeleteItem(Guid itemId);
     }
 }

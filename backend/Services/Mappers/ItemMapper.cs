@@ -5,7 +5,7 @@ namespace backend.Services.Mappers
 {
     public class ItemMapper
     {
-        public static Item ToEntity(ItemDto dto) // Convert a DTO to an entity with an ID for updating
+        public static Item ToEntity(ApiItem dto) // Convert a DTO to an entity with an ID for updating
         {
             return new Item
             {
@@ -19,7 +19,7 @@ namespace backend.Services.Mappers
             };
         }
         
-        public static Item ToEntity(CreateItem dto) // dto to a new item for creating
+        public static Item ToEntity(ApiItemCreate dto) // dto to a new item for creating
         {
             return new Item
             {
@@ -29,13 +29,13 @@ namespace backend.Services.Mappers
                 Reminder = dto.Reminder,
                 DueDate = dto.DueDate,
                 Frequency = dto.Frequency,
-                IsComplete = dto.IsComplete
+                IsComplete = false
             };
         }
 
-        public static ItemDto ToDto(Item item)
+        public static ApiItem ToDto(Item item)
         {
-            return new ItemDto
+            return new ApiItem
             {
                 Id = item.Id,
                 Title = item.Title,

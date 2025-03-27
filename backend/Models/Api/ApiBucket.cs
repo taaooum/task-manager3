@@ -1,6 +1,6 @@
 ﻿namespace backend.Models.Api
 {
-    public class BucketDto
+    public class ApiBucket
     {
         public Guid Id { get; set; }
         

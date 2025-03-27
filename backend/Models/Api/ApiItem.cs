@@ -1,11 +1,11 @@
-﻿using backend.Models.Domain;
+﻿using backend.Enums;
 
 namespace backend.Models.Api
 {
-    public class ItemDto
+    public class ApiItem
     {
         public Guid Id { get; set; }
-        public string? Title { get; set; }
+        public string Title { get; set; } = String.Empty;
 
         public Guid BucketId { get; set; }
         

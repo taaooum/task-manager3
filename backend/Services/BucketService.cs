@@ -10,7 +10,7 @@ namespace backend.Services
 {
     public class BucketService(BucketRepository bucketRepository) : IBucketService
     {
-        public async Task<IEnumerable<BucketDto>> GetAllBuckets()
+        public async Task<IEnumerable<ApiBucket>> GetAllBuckets()
         {
             List<Bucket>? buckets = await bucketRepository.GetAllBuckets();
             
@@ -18,43 +18,43 @@ namespace backend.Services
                 throw new BucketNotFoundException(); // No items were found
             
             
-            List<BucketDto> bucketDtoList = new List<BucketDto>();
+            List<ApiBucket> bucketDtoList = new List<ApiBucket>();
             foreach (Bucket bucket in buckets)
             {
-                BucketDto bucketDto = BucketMapper.ToDto(bucket);
+                ApiBucket apiBucket = BucketMapper.ToDto(bucket);
 
-                bucketDtoList.Add(bucketDto);
+                bucketDtoList.Add(apiBucket);
             }
             return bucketDtoList;
         }
         
-        public async Task<BucketDto> GetBucketById(Guid id)
+        public async Task<ApiBucket> GetBucketById(Guid id)
         {
             Bucket? bucket = await bucketRepository.GetBucketById(id);
             
             if (bucket == null)
                 throw new ItemNotFoundException(id); // Returns HTTP 404, if the element gets not found
             
-            BucketDto bucketDto = BucketMapper.ToDto(bucket);
+            ApiBucket apiBucket = BucketMapper.ToDto(bucket);
 
-            return bucketDto;
+            return apiBucket;
         }
 
-        public async Task<Bucket> CreateBucket([FromBody] CreateBucket createBucket)
+        public async Task<Bucket> CreateBucket([FromBody] ApiBucketCreate apiBucketCreate)
         {
-            if (createBucket == null)
-                throw new ArgumentNullException(nameof(createBucket), "Bucket cannot be null.");
+            if (apiBucketCreate == null)
+                throw new ArgumentNullException(nameof(apiBucketCreate), "Bucket cannot be null.");
             
-            Bucket bucket = BucketMapper.ToEntity(createBucket);
+            Bucket bucket = BucketMapper.ToEntity(apiBucketCreate);
 
             await bucketRepository.AddBucket(bucket);
             
             return bucket;
         }
 
-        public async Task UpdateBucket (Guid id, [FromBody] BucketDto bucketDto)
+        public async Task UpdateBucket (Guid id, [FromBody] ApiBucket apiBucket)
         {
-            if (id != bucketDto.Id)
+            if (id != apiBucket.Id)
                 throw new BadHttpRequestException("Bucket Id mismatch");
             
             Bucket? bucket = await bucketRepository.GetBucketById(id);
@@ -62,7 +62,7 @@ namespace backend.Services
             if (bucket == null)
                 throw new ItemNotFoundException(id);
             
-            bucket = BucketMapper.ToEntity(bucketDto);
+            bucket = BucketMapper.ToEntity(apiBucket);
             
             await bucketRepository.UpdateBucket(bucket);
         }

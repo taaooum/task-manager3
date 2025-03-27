@@ -5,7 +5,7 @@ namespace backend.Services.Mappers
 {
     public class BucketMapper
     {
-        public static Bucket ToEntity(BucketDto dto) // Convert a DTO to an entity with an ID for updating
+        public static Bucket ToEntity(ApiBucket dto) // Convert a DTO to an entity with an ID for updating
         {
             return new Bucket
             {
@@ -15,7 +15,7 @@ namespace backend.Services.Mappers
             };
         }
 
-        public static Bucket ToEntity(CreateBucket dto) // dto to a new bucket for creating
+        public static Bucket ToEntity(ApiBucketCreate dto) // dto to a new bucket for creating
         {
             return new Bucket
             {
@@ -25,9 +25,9 @@ namespace backend.Services.Mappers
             };
         }
         
-        public static BucketDto ToDto(Bucket bucket)
+        public static ApiBucket ToDto(Bucket bucket)
         {
-            return new BucketDto
+            return new ApiBucket
             {
                 Id = bucket.Id,
                 Title = bucket.Title,
