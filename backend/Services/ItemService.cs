@@ -3,11 +3,24 @@ using backend.Models.Api;
 using Microsoft.AspNetCore.Mvc;
 using backend.Repositories;
 using backend.Services.Exceptions;
-using backend.Services.Interfaces;
 using backend.Services.Mappers;
 
 namespace backend.Services
 {
+    /// <summary>
+    /// The interfaces sits inside the Service for better readability by scaling
+    /// </summary>
+    public interface IItemService
+    {
+        Task<IEnumerable<ApiItem>> GetAllItems();
+        Task<ApiItem> GetItemById(Guid itemId);
+        Task<Item> CreateItem(ApiItemCreate apiItemCreate);
+        Task UpdateItem(Guid itemId, ApiItem apiItem);
+        Task DeleteItem(Guid itemId);
+    }
+    /// <summary>
+    /// 
+    /// </summary>
     public class ItemService(ItemRepository itemRepository) : IItemService
     {
         public async Task<IEnumerable<ApiItem>> GetAllItems()

@@ -1,6 +1,5 @@
 ﻿using backend.Models.Api;
 using backend.Models.Domain;
-using backend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using backend.Repositories;
 using backend.Services.Exceptions;
@@ -8,6 +7,22 @@ using backend.Services.Mappers;
 
 namespace backend.Services
 {
+    /// <summary>
+    /// The interfaces sits inside the Service for better readability by scaling
+    /// </summary>
+    public interface IBucketService
+    {
+        Task<IEnumerable<ApiBucket>> GetAllBuckets();
+        Task<ApiBucket> GetBucketById(Guid bucketId);
+        Task<Bucket> CreateBucket(ApiBucketCreate apiBucketCreate);
+        Task UpdateBucket(Guid bucketId, ApiBucket apiBucket);
+        Task DeleteBucket(Guid bucketId);
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="bucketRepository"></param>
     public class BucketService(BucketRepository bucketRepository) : IBucketService
     {
         public async Task<IEnumerable<ApiBucket>> GetAllBuckets()

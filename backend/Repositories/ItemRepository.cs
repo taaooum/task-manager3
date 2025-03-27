@@ -1,11 +1,18 @@
-﻿using backend.Data;
-using backend.Models.Domain;
-using backend.Repositories.Interfaces;
+﻿using backend.Models.Domain;
+using backend.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Repositories
 {
-    public class ItemRepository(RepositoryDbContext dbContext) : IItemRepository
+    public interface IItemRepository
+    {
+        Task<List<Item>?> GetAllItems();
+        Task<Item?> GetItemById(Guid id);
+        Task AddItem(Item bucket);
+        Task UpdateItem(Item item);
+        Task DeleteItem(Guid id);
+    }
+    public class ItemRepository(DataContextService dbContext) : IItemRepository
     {
         public async Task<List<Item>?> GetAllItems()
         {
