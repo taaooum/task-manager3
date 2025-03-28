@@ -29,7 +29,7 @@ namespace backend.Services
             List<Item>? items = await dataContext.Items.ToListAsync();
             if (items == null)
             {
-                throw new ItemNotFoundException(); // No items were found
+                throw new NotFoundException("No items were found.");
             }
 
             // Convert Items to itemDtoList
@@ -49,7 +49,7 @@ namespace backend.Services
             Item? item = await dataContext.Items.FindAsync(id);
             if (item == null)
             {
-                throw new ItemNotFoundException(id); // Returns HTTP 404, if the element gets not found
+                throw new NotFoundException($"The item with the identifier {id} was not found."); // Returns HTTP 404, if the element gets not found
             }
 
             ApiItem apiItem = ItemMapper.ToDto(item);
@@ -73,11 +73,11 @@ namespace backend.Services
         public async Task UpdateItemAsync(Guid id, [FromBody] ApiItem apiItem)
         {
             if (id != apiItem.Id)
-                throw new BadHttpRequestException("Bucket Id mismatch");
+                throw new BadRequestException("Bucket Id mismatch");
 
             Item? item = await dataContext.Items.FindAsync(id);
             if (item == null)
-                throw new ItemNotFoundException(id);
+                throw new NotFoundException($"The item with the identifier {id} was not found.");
             
             item = ItemMapper.ToEntity(apiItem);
 
@@ -89,7 +89,7 @@ namespace backend.Services
         {
             Item? item = await dataContext.Items.FindAsync(id);
             if (item == null)
-                throw new ItemNotFoundException(id);
+                throw new NotFoundException($"The item with the identifier {id} was not found.");
 
             dataContext.Remove(item);
             await dataContext.SaveChangesAsync();

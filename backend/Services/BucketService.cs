@@ -27,7 +27,7 @@ namespace backend.Services
             List<Bucket>? buckets = await dataContext.Buckets.ToListAsync();
             
             if (buckets == null)
-                throw new BucketNotFoundException(); // No items were found
+                throw new NotFoundException("No buckets were found.");
             
             
             List<ApiBucket> bucketDtoList = new List<ApiBucket>();
@@ -45,7 +45,7 @@ namespace backend.Services
             Bucket? bucket = await dataContext.Buckets.FindAsync(id);
             
             if (bucket == null)
-                throw new ItemNotFoundException(id); // Returns HTTP 404, if the element gets not found
+                throw new NotFoundException($"The bucket with the identifier {id} was not found."); // Returns HTTP 404, if the element gets not found
             
             ApiBucket apiBucket = BucketMapper.ToDto(bucket);
 
@@ -68,12 +68,12 @@ namespace backend.Services
         public async Task UpdateBucketAsync(Guid id, [FromBody] ApiBucket apiBucket)
         {
             if (id != apiBucket.Id)
-                throw new BadHttpRequestException("Bucket Id mismatch");
+                throw new BadRequestException("Bucket Id mismatch");
             
             Bucket? bucket = await dataContext.Buckets.FindAsync(id);
             
             if (bucket == null)
-                throw new ItemNotFoundException(id);
+                throw new NotFoundException($"The bucket with the identifier {id} was not found.");
             
             bucket = BucketMapper.ToEntity(apiBucket);
             
@@ -86,7 +86,7 @@ namespace backend.Services
             Bucket? bucket = await dataContext.Buckets.FindAsync(id);
             
             if (bucket == null)
-                throw new ItemNotFoundException(id); 
+                throw new NotFoundException($"The bucket with the identifier {id} was not found.");
             
             dataContext.Buckets.Remove(bucket);
             await dataContext.SaveChangesAsync();

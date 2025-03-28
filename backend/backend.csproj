@@ -29,7 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Helper\Filters\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 

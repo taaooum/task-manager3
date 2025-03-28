@@ -1,3 +1,4 @@
+using backend.Filters;
 using backend.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,7 +19,10 @@ namespace backend
             builder.Services.AddScoped<BucketService>();
             builder.Services.AddScoped<ItemService>();
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers(options =>
+            {
+                options.Filters.Add(new HttpResponseExceptionFilter());
+            });
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             

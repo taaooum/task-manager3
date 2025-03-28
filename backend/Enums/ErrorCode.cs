@@ -1,6 +1,6 @@
 namespace backend.Models.Domain;
 
-public enum ErrorCodes
+public enum ErrorCode
 {
     NotFound = 1
 }

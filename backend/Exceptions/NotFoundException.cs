@@ -1,4 +1,7 @@
 ﻿namespace backend.Services.Exceptions
 {
-    public abstract class NotFoundException(string message) : Exception(message);
+    public class NotFoundException(string message) : HttpResponseException(404, message)
+    {
+        
+    }
 }

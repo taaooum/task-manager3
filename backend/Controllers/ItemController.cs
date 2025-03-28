@@ -31,6 +31,7 @@ namespace backend.Controllers
         /// <summary>
         /// Retrieves all available items.
         /// </summary>
+        /// <returns>A list of all existing items.</returns>
         [HttpGet("GetItems")]
         [ProducesResponseType<ApiItem>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
