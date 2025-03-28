@@ -15,7 +15,7 @@ namespace backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ApiBucket>> GetBucket(Guid id)
         {
-            ApiBucket apiBucket = await bucketService.GetBucketById(id);
+            ApiBucket apiBucket = await bucketService.GetBucketByIdAsync(id);
             return Ok(apiBucket);
         }
 
@@ -24,7 +24,7 @@ namespace backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<List<ApiBucket>>> GetAllBuckets()
         {
-            IEnumerable<ApiBucket> buckets = await bucketService.GetAllBuckets();
+            IEnumerable<ApiBucket> buckets = await bucketService.GetBucketsAsync();
             return Ok(buckets);
         }
 
@@ -34,8 +34,8 @@ namespace backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<Guid>> CreateBucket([FromBody] ApiBucketCreate apiBucketCreate)
         {
-            Bucket bucket = await bucketService.CreateBucket(apiBucketCreate);
-            return Created($"/api/buckets/{bucket.Id}", bucket.Id);
+            Guid bucketId = await bucketService.CreateBucketAsync(apiBucketCreate);
+            return Created($"/api/buckets/{bucketId}", bucketId);
         }
 
         [HttpPut("{id}")]
@@ -45,7 +45,7 @@ namespace backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task UpdateBucket(Guid id, [FromBody] ApiBucket apiBucket)
         {
-            await bucketService.UpdateBucket(id, apiBucket);
+            await bucketService.UpdateBucketAsync(id, apiBucket);
         }
         
         
@@ -55,7 +55,7 @@ namespace backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task DeleteBucket(Guid id)
         {
-            await bucketService.DeleteBucket(id);
+            await bucketService.DeleteBucketAsync(id);
         }
     }
 }

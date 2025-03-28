@@ -1,5 +1,4 @@
 using backend.Services;
-using backend.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend
@@ -15,19 +14,14 @@ namespace backend
             // A new Context for Postgresql Database
             builder.Services.AddDbContext<DataContextService>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-            builder.Services.AddScoped<BucketRepository>();
-            builder.Services.AddScoped<ItemRepository>(); 
-
+            
             builder.Services.AddScoped<BucketService>();
             builder.Services.AddScoped<ItemService>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
-
-
+            
             // Build the application from the configured services
             var app = builder.Build();
             {

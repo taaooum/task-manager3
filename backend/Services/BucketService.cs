@@ -1,9 +1,9 @@
 ﻿using backend.Models.Api;
 using backend.Models.Domain;
 using Microsoft.AspNetCore.Mvc;
-using backend.Repositories;
 using backend.Services.Exceptions;
 using backend.Services.Mappers;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Services
 {
@@ -12,22 +12,19 @@ namespace backend.Services
     /// </summary>
     public interface IBucketService
     {
-        Task<IEnumerable<ApiBucket>> GetAllBuckets();
-        Task<ApiBucket> GetBucketById(Guid bucketId);
-        Task<Bucket> CreateBucket(ApiBucketCreate apiBucketCreate);
-        Task UpdateBucket(Guid bucketId, ApiBucket apiBucket);
-        Task DeleteBucket(Guid bucketId);
+        Task<IEnumerable<ApiBucket>> GetBucketsAsync();
+        Task<ApiBucket> GetBucketByIdAsync(Guid bucketId);
+        Task<Guid> CreateBucketAsync(ApiBucketCreate apiBucketCreate);
+        Task UpdateBucketAsync(Guid bucketId, ApiBucket apiBucket);
+        Task DeleteBucketAsync(Guid bucketId);
     }
     
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="bucketRepository"></param>
-    public class BucketService(BucketRepository bucketRepository) : IBucketService
+    
+    public class BucketService(DataContextService dataContext) : IBucketService
     {
-        public async Task<IEnumerable<ApiBucket>> GetAllBuckets()
+        public async Task<IEnumerable<ApiBucket>> GetBucketsAsync()
         {
-            List<Bucket>? buckets = await bucketRepository.GetAllBuckets();
+            List<Bucket>? buckets = await dataContext.Buckets.ToListAsync();
             
             if (buckets == null)
                 throw new BucketNotFoundException(); // No items were found
@@ -43,9 +40,9 @@ namespace backend.Services
             return bucketDtoList;
         }
         
-        public async Task<ApiBucket> GetBucketById(Guid id)
+        public async Task<ApiBucket> GetBucketByIdAsync(Guid id)
         {
-            Bucket? bucket = await bucketRepository.GetBucketById(id);
+            Bucket? bucket = await dataContext.Buckets.FindAsync(id);
             
             if (bucket == null)
                 throw new ItemNotFoundException(id); // Returns HTTP 404, if the element gets not found
@@ -55,39 +52,44 @@ namespace backend.Services
             return apiBucket;
         }
 
-        public async Task<Bucket> CreateBucket([FromBody] ApiBucketCreate apiBucketCreate)
+        public async Task<Guid> CreateBucketAsync([FromBody] ApiBucketCreate apiBucketCreate)
         {
             if (apiBucketCreate == null)
                 throw new ArgumentNullException(nameof(apiBucketCreate), "Bucket cannot be null.");
             
             Bucket bucket = BucketMapper.ToEntity(apiBucketCreate);
 
-            await bucketRepository.AddBucket(bucket);
+            dataContext.Buckets.Add(bucket);
+            await dataContext.SaveChangesAsync();
             
-            return bucket;
+            return bucket.Id;
         }
 
-        public async Task UpdateBucket (Guid id, [FromBody] ApiBucket apiBucket)
+        public async Task UpdateBucketAsync(Guid id, [FromBody] ApiBucket apiBucket)
         {
             if (id != apiBucket.Id)
                 throw new BadHttpRequestException("Bucket Id mismatch");
             
-            Bucket? bucket = await bucketRepository.GetBucketById(id);
+            Bucket? bucket = await dataContext.Buckets.FindAsync(id);
             
             if (bucket == null)
                 throw new ItemNotFoundException(id);
             
             bucket = BucketMapper.ToEntity(apiBucket);
             
-            await bucketRepository.UpdateBucket(bucket);
+            dataContext.Buckets.Update(bucket);
+            await dataContext.SaveChangesAsync();
         }
-        
-        public async Task DeleteBucket(Guid id)
+
+        public async Task DeleteBucketAsync(Guid id)
         {
-            if (await bucketRepository.GetBucketById(id) == null)
+            Bucket? bucket = await dataContext.Buckets.FindAsync(id);
+            
+            if (bucket == null)
                 throw new ItemNotFoundException(id); 
             
-            await bucketRepository.DeleteBucket(id);
+            dataContext.Buckets.Remove(bucket);
+            await dataContext.SaveChangesAsync();
         }
     }
 }

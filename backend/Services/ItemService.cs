@@ -1,9 +1,9 @@
 ﻿using backend.Models.Domain;
 using backend.Models.Api;
 using Microsoft.AspNetCore.Mvc;
-using backend.Repositories;
 using backend.Services.Exceptions;
 using backend.Services.Mappers;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Services
 {
@@ -12,20 +12,21 @@ namespace backend.Services
     /// </summary>
     public interface IItemService
     {
-        Task<IEnumerable<ApiItem>> GetAllItems();
-        Task<ApiItem> GetItemById(Guid itemId);
-        Task<Item> CreateItem(ApiItemCreate apiItemCreate);
-        Task UpdateItem(Guid itemId, ApiItem apiItem);
-        Task DeleteItem(Guid itemId);
+        Task<IEnumerable<ApiItem>> GetItemsAsync();
+        Task<ApiItem> GetItemByIdAsync(Guid itemId);
+        Task<Guid> CreateItemAsync(ApiItemCreate apiItemCreate);
+        Task UpdateItemAsync(Guid itemId, ApiItem apiItem);
+        Task DeleteItemAsync(Guid itemId);
     }
+    
     /// <summary>
     /// 
     /// </summary>
-    public class ItemService(ItemRepository itemRepository) : IItemService
+    public class ItemService(DataContextService dataContext) : IItemService
     {
-        public async Task<IEnumerable<ApiItem>> GetAllItems()
+        public async Task<IEnumerable<ApiItem>> GetItemsAsync()
         {
-            List<Item>? items = await itemRepository.GetAllItems();
+            List<Item>? items = await dataContext.Items.ToListAsync();
             if (items == null)
             {
                 throw new ItemNotFoundException(); // No items were found
@@ -43,9 +44,9 @@ namespace backend.Services
             return itemDtoList;
         }
         
-        public async Task<ApiItem> GetItemById(Guid id)
+        public async Task<ApiItem> GetItemByIdAsync(Guid id)
         {
-            Item? item = await itemRepository.GetItemById(id);
+            Item? item = await dataContext.Items.FindAsync(id);
             if (item == null)
             {
                 throw new ItemNotFoundException(id); // Returns HTTP 404, if the element gets not found
@@ -56,38 +57,42 @@ namespace backend.Services
             return apiItem;
         }
 
-        public async Task<Item> CreateItem([FromBody] ApiItemCreate apiItemCreate)
+        public async Task<Guid> CreateItemAsync([FromBody] ApiItemCreate apiItemCreate)
         {
             if (apiItemCreate == null)
                 throw new ArgumentNullException(nameof(apiItemCreate), "Item cannot be null.");
 
             Item item = ItemMapper.ToEntity(apiItemCreate);
 
-            await itemRepository.AddItem(item);
+            dataContext.Items.Add(item);
+            await dataContext.SaveChangesAsync();
             
-            return item;
+            return item.Id;
         }
 
-        public async Task UpdateItem (Guid id, [FromBody] ApiItem apiItem)
+        public async Task UpdateItemAsync(Guid id, [FromBody] ApiItem apiItem)
         {
             if (id != apiItem.Id)
                 throw new BadHttpRequestException("Bucket Id mismatch");
 
-            Item? item = await itemRepository.GetItemById(id);
+            Item? item = await dataContext.Items.FindAsync(id);
             if (item == null)
                 throw new ItemNotFoundException(id);
             
             item = ItemMapper.ToEntity(apiItem);
 
-            await itemRepository.UpdateItem(item);
+            dataContext.Items.Update(item);
+            await dataContext.SaveChangesAsync();
         }
         
-        public async Task DeleteItem(Guid id)
+        public async Task DeleteItemAsync(Guid id)
         {
-            if (await itemRepository.GetItemById(id) == null)
-                throw new ItemNotFoundException(id); 
-            
-            await itemRepository.DeleteItem(id);
+            Item? item = await dataContext.Items.FindAsync(id);
+            if (item == null)
+                throw new ItemNotFoundException(id);
+
+            dataContext.Remove(item);
+            await dataContext.SaveChangesAsync();
         }
     }
 }
