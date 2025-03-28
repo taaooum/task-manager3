@@ -17,14 +17,13 @@ namespace backend.Controllers
         /// </summary>
         /// <param name="id">The unique identifier of the item.</param>
         /// <returns>The matching item.</returns>
-        [HttpGet("GetItem{id}")]
+        [HttpGet("GetItem_{id}")]
         [ProducesResponseType<ApiItem>(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ApiItem> GetItem(Guid id)
         {
-            ApiItem apiItem = await itemService.GetItemByIdAsync(id); 
+            ApiItem apiItem = await itemService.GetItemByIdAsync(id);
             return apiItem;
         }
 
@@ -34,13 +33,12 @@ namespace backend.Controllers
         /// <returns>A list of all existing items.</returns>
         [HttpGet("GetItems")]
         [ProducesResponseType<ApiItem>(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IEnumerable<ApiItem>> GetAllItems()
         {
             IEnumerable<ApiItem> items = await itemService.GetItemsAsync();
-            return items; 
+            return items;
         }
 
         /// <summary>
@@ -49,7 +47,7 @@ namespace backend.Controllers
         /// <param name="apiItemCreate">The data for the item to be created.</param>
         /// <returns>The ID of the newly created item.</returns>
         [HttpPost]
-        [ProducesResponseType<Guid>(StatusCodes.Status201Created, Type = typeof(Item))]
+        [ProducesResponseType<Guid>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<Guid>> CreateItem([FromBody] ApiItemCreate apiItemCreate)

@@ -60,7 +60,7 @@ namespace backend.Services
         public async Task<Guid> CreateItemAsync([FromBody] ApiItemCreate apiItemCreate)
         {
             if (apiItemCreate == null)
-                throw new ArgumentNullException(nameof(apiItemCreate), "Item cannot be null.");
+                throw new BadRequestException("Item cannot be null.");
 
             Item item = ItemMapper.ToEntity(apiItemCreate);
 

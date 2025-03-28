@@ -17,7 +17,7 @@ namespace backend.Controllers
         /// </summary>
         /// <param name="id">The unique identifier of the bucket.</param>
         /// <returns>The matching bucket.</returns>
-        [HttpGet("{id}")]
+        [HttpGet("GetBucket_{id}")]
         [ProducesResponseType(typeof(ApiBucket), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -31,8 +31,9 @@ namespace backend.Controllers
         /// Retrieves all available buckets.
         /// </summary>
         /// <returns>A list of all existing buckets.</returns>
-        [HttpGet]
+        [HttpGet("GetBuckets")]
         [ProducesResponseType(typeof(List<ApiBucket>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<List<ApiBucket>>> GetAllBuckets()
         {

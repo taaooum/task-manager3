@@ -55,7 +55,7 @@ namespace backend.Services
         public async Task<Guid> CreateBucketAsync([FromBody] ApiBucketCreate apiBucketCreate)
         {
             if (apiBucketCreate == null)
-                throw new ArgumentNullException(nameof(apiBucketCreate), "Bucket cannot be null.");
+                throw new BadRequestException("Bucket cannot be null.");
             
             Bucket bucket = BucketMapper.ToEntity(apiBucketCreate);
 
