@@ -11,7 +11,7 @@ namespace backend.Management
     /// The management is for database operations responsible
     /// </summary>
     /// <param name="dataContext"></param>
-    public partial class Managment(DataContextService dataContext) : IManagement
+    public partial class Management(DataContextService dataContext) : IManagement
     {
         // something
     }

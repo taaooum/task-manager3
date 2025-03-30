@@ -1,6 +1,5 @@
 ﻿using backend.Models.Api;
 using backend.Models.Domain;
-using backend.Services;
 using backend.Services.Exceptions;
 using backend.Services.Mappers;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +10,11 @@ namespace backend.Management
     /// <summary>
     /// The interfaces sits inside the Service for better readability by scaling
     /// </summary>
-    public interface IItemManagmentService
+    public interface IItemManagementService
     {
-        Task<IEnumerable<ApiItem>> GetItemsAsync();
+        Task<List<ApiItem>> GetItemsAsync();
         Task<ApiItem> GetItemByIdAsync(Guid itemId);
+        Task<List<ApiItem>> GetItemsByBucketIdAsync(Guid bucketId);
         Task<Guid> CreateItemAsync(ApiItemCreate apiItemCreate);
         Task UpdateItemAsync(Guid itemId, ApiItem apiItem);
         Task DeleteItemAsync(Guid itemId);
@@ -23,16 +23,15 @@ namespace backend.Management
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="dataContext">dataContext is injected inside Managment.cs</param>
-    public partial class Managment : IItemManagmentService
+    /// <param name="dataContext">dataContext is injected inside Management.cs</param>
+    public partial class Management : IItemManagementService
     {
-        public async Task<IEnumerable<ApiItem>> GetItemsAsync()
+        public async Task<List<ApiItem>> GetItemsAsync()
         {
             List<Item>? items = await dataContext.Items.ToListAsync();
             if (items == null)
-            {
                 throw new NotFoundException("No items were found.");
-            }
+            
 
             // Convert Items to itemDtoList
             List<ApiItem> itemDtoList = new List<ApiItem>();
@@ -50,15 +49,36 @@ namespace backend.Management
         {
             Item? item = await dataContext.Items.FindAsync(id);
             if (item == null)
-            {
                 throw new NotFoundException($"The item with the identifier {id} was not found."); // Returns HTTP 404, if the element gets not found
-            }
+            
 
             ApiItem apiItem = ItemMapper.ToDto(item);
 
             return apiItem;
         }
 
+        public async Task<List<ApiItem>> GetItemsByBucketIdAsync(Guid bucketId)
+        {
+            List<Item>? items = await dataContext.Items
+                .Where(i => i.BucketId == bucketId)
+                .ToListAsync();
+            
+            if (items == null)
+                throw new NotFoundException("No items were found.");
+            
+
+            // Convert Items to itemDtoList
+            List<ApiItem> apiItemList = new List<ApiItem>();
+            foreach (Item item in items)
+            {
+                ApiItem apiItem = ItemMapper.ToDto(item);
+
+                apiItemList.Add(apiItem);
+            }
+
+            return apiItemList;
+        }
+        
         public async Task<Guid> CreateItemAsync([FromBody] ApiItemCreate apiItemCreate)
         {
             if (apiItemCreate == null)

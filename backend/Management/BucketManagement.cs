@@ -1,6 +1,5 @@
 ﻿using backend.Models.Api;
 using backend.Models.Domain;
-using backend.Services;
 using backend.Services.Exceptions;
 using backend.Services.Mappers;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +10,9 @@ namespace backend.Management
     /// <summary>
     /// The interfaces sits inside the Service for better readability by scaling
     /// </summary>
-    public interface IBucketManagmentService
+    public interface IBucketManagementService
     {
-        Task<IEnumerable<ApiBucket>> GetBucketsAsync();
+        Task<List<ApiBucket>> GetBucketsAsync();
         Task<ApiBucket> GetBucketByIdAsync(Guid bucketId);
         Task<Guid> CreateBucketAsync(ApiBucketCreate apiBucketCreate);
         Task UpdateBucketAsync(Guid bucketId, ApiBucket apiBucket);
@@ -23,10 +22,10 @@ namespace backend.Management
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="dataContext">dataContext is injected inside Managment.cs</param>
-    public partial class Managment : IBucketManagmentService
+    /// <param name="dataContext">dataContext is injected inside Management.cs</param>
+    public partial class Management : IBucketManagementService
     {
-        public async Task<IEnumerable<ApiBucket>> GetBucketsAsync()
+        public async Task<List<ApiBucket>> GetBucketsAsync()
         {
             List<Bucket>? buckets = await dataContext.Buckets.ToListAsync();
             
@@ -41,6 +40,7 @@ namespace backend.Management
 
                 bucketDtoList.Add(apiBucket);
             }
+            
             return bucketDtoList;
         }
         

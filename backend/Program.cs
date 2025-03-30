@@ -17,7 +17,7 @@ namespace backend
             builder.Services.AddDbContext<DataContextService>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
             
-            builder.Services.AddScoped<Managment>();
+            builder.Services.AddScoped<Management.Management>();
 
             builder.Services.AddControllers(options =>
             {
