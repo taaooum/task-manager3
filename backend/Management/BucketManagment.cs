@@ -1,16 +1,17 @@
 ﻿using backend.Models.Api;
 using backend.Models.Domain;
-using Microsoft.AspNetCore.Mvc;
+using backend.Services;
 using backend.Services.Exceptions;
 using backend.Services.Mappers;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace backend.Services
+namespace backend.Management
 {
     /// <summary>
     /// The interfaces sits inside the Service for better readability by scaling
     /// </summary>
-    public interface IBucketService
+    public interface IBucketManagmentService
     {
         Task<IEnumerable<ApiBucket>> GetBucketsAsync();
         Task<ApiBucket> GetBucketByIdAsync(Guid bucketId);
@@ -19,8 +20,11 @@ namespace backend.Services
         Task DeleteBucketAsync(Guid bucketId);
     }
     
-    
-    public class BucketService(DataContextService dataContext) : IBucketService
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="dataContext">dataContext is injected inside Managment.cs</param>
+    public partial class Managment : IBucketManagmentService
     {
         public async Task<IEnumerable<ApiBucket>> GetBucketsAsync()
         {

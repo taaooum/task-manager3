@@ -1,16 +1,17 @@
-﻿using backend.Models.Domain;
-using backend.Models.Api;
-using Microsoft.AspNetCore.Mvc;
+﻿using backend.Models.Api;
+using backend.Models.Domain;
+using backend.Services;
 using backend.Services.Exceptions;
 using backend.Services.Mappers;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace backend.Services
+namespace backend.Management
 {
     /// <summary>
     /// The interfaces sits inside the Service for better readability by scaling
     /// </summary>
-    public interface IItemService
+    public interface IItemManagmentService
     {
         Task<IEnumerable<ApiItem>> GetItemsAsync();
         Task<ApiItem> GetItemByIdAsync(Guid itemId);
@@ -22,7 +23,8 @@ namespace backend.Services
     /// <summary>
     /// 
     /// </summary>
-    public class ItemService(DataContextService dataContext) : IItemService
+    /// <param name="dataContext">dataContext is injected inside Managment.cs</param>
+    public partial class Managment : IItemManagmentService
     {
         public async Task<IEnumerable<ApiItem>> GetItemsAsync()
         {

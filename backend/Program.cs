@@ -1,4 +1,5 @@
 using backend.Filters;
+using backend.Management;
 using backend.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,8 +17,7 @@ namespace backend
             builder.Services.AddDbContext<DataContextService>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
             
-            builder.Services.AddScoped<BucketService>();
-            builder.Services.AddScoped<ItemService>();
+            builder.Services.AddScoped<Managment>();
 
             builder.Services.AddControllers(options =>
             {

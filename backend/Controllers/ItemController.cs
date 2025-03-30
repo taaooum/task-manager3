@@ -1,4 +1,5 @@
-﻿using backend.Models.Api;
+﻿using backend.Management;
+using backend.Models.Api;
 using backend.Models.Domain;
 using Microsoft.AspNetCore.Mvc;
 using backend.Services;
@@ -10,7 +11,7 @@ namespace backend.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public class ItemController(ItemService itemService) : ControllerBase
+    public class ItemController(Managment itemService) : ControllerBase
     {
         /// <summary>
         /// Retrieves an item by its ID.

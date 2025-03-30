@@ -1,4 +1,5 @@
-﻿using backend.Models.Api;
+﻿using backend.Management;
+using backend.Models.Api;
 using backend.Services;
 using backend.Models.Domain;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,7 @@ namespace backend.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public class BucketController(BucketService bucketService) : ControllerBase
+    public class BucketController(Managment bucketService) : ControllerBase
     {
         /// <summary>
         /// Retrieves a bucket by its ID.
