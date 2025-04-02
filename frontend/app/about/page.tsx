@@ -1,0 +1,1 @@
+// A page that displays information about the application and its author

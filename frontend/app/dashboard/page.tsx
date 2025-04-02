@@ -1,10 +1,22 @@
-import Logo from "@/components/logo";
+import Overview from "@/components/Overview";
+import Sidebar from "@/components/Sidebar";
+import React from "react";
 
-export default function Home() {
+export default async function Page() {
+
+  const data = await fetch('http://localhost:5046/api/Buckets')
+  const buckets = await data.json()
+
   return (
     <>
-      <div>Hello Dashboard</div>
-      <Logo className=" mb-6 md:mb-16 text-cyan-400" />
+      <Sidebar> 
+        {buckets.map((bucket : Bucket) => (
+          <li key={bucket.id} >
+            {bucket.title}
+          </li>
+        ))}
+      </Sidebar>
+      <Overview />
     </>
   );
 }
